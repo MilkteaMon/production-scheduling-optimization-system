@@ -1,0 +1,11 @@
+{
+  "parameters": {
+    "job_count": 30,
+    "machine_count": 4,
+    "seed": 42,
+    "profile": "tight"
+  },
+  "generator_version": "1.0",
+  "job_hash": "54728ff6ea8231437bd3178596ace093668f36d87107e0bc3fdb2a420d961f58",
+  "horizon_min": 1328
+}

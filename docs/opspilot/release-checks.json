@@ -1,0 +1,111 @@
+{
+  "checked_at_utc": "2026-10-11T15:27:09.386648+00:00",
+  "release_state": "local_windows_implementation_verified; owner_review_and_platform_release_checks_pending",
+  "versions": {
+    "python": "3.13.15",
+    "fastapi": "0.143.0",
+    "pydantic": "2.14.0",
+    "sqlalchemy": "2.1.4",
+    "alembic": "1.20.0",
+    "pulp": "4.0.0",
+    "numpy": "2.5.4",
+    "pandas": "2.3.3",
+    "openai-agents": "0.23.1",
+    "cbc": "2.10.13",
+    "node": "24.19.0",
+    "model_version": "1.0",
+    "solver_adapter_version": "1.1"
+  },
+  "checks": {
+    "backend": {
+      "passed": 47,
+      "duration_seconds": 6.548,
+      "evidence": "checks/backend.xml"
+    },
+    "frontend_unit": {
+      "passed": 3,
+      "evidence": "checks/frontend-unit.json"
+    },
+    "browser": {
+      "startTime": "2026-10-11T15:25:26.917Z",
+      "duration": 46363.173,
+      "expected": 8,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0,
+      "evidence": "checks/browser.json",
+      "viewports": [
+        "desktop",
+        "Pixel 7"
+      ],
+      "uses_real_cbc": true,
+      "uses_paid_ai": false
+    },
+    "ruff": "passed",
+    "eslint": "passed",
+    "typescript": "passed",
+    "production_build": "passed",
+    "openapi_regeneration": "unchanged",
+    "frontend_api_type_regeneration": "unchanged",
+    "markdown_links": "9 files; no missing targets"
+  },
+  "fresh_install": {
+    "method": "isolated source copy without existing virtualenv, node_modules, or dist; lockfile-based installation",
+    "uv_locked_install": "passed",
+    "npm_ci": "passed",
+    "backend_passed": 47,
+    "backend_duration_seconds": 6.952,
+    "backend_evidence": "checks/clean-install-backend.xml",
+    "frontend_build_lint_and_3_unit_tests": "passed",
+    "literal_remote_clean_clone": false
+  },
+  "accessibility": {
+    "automated_axe_scans": "overview and data dialog; desktop and mobile; zero detected WCAG 2 A/AA violations",
+    "keyboard": "focus trap, Escape, restoration passed",
+    "complete_manual_audit": false
+  },
+  "benchmark": {
+    "method_records": 285,
+    "base_datasets": 90,
+    "base_proven_optimal": 49,
+    "base_time_limit": 41,
+    "warm_start_loaded": 90,
+    "solver_failures": 0,
+    "heuristic_fallbacks": 0,
+    "all_validated": true,
+    "evidence": "../../experiments/results/full-60s/"
+  },
+  "artifact_readback": {
+    "benchmark_records_read_back": 285,
+    "demonstration_records_read_back": 6,
+    "all_hashes_and_recomputed_kpis_match": true,
+    "all_schedules_valid": true,
+    "all_displayed_times_integral": true,
+    "optimality_provenance_consistent": true
+  },
+  "demonstration": {
+    "jobs": 30,
+    "baseline_machines": 4,
+    "scenario_machines": 5,
+    "seed": 42,
+    "baseline_milp_weighted_minutes": 6072,
+    "scenario_best_known_weighted_minutes": 2215,
+    "baseline_proven_optimal": false,
+    "receipt": "demo-artifacts/receipt.json",
+    "screenshots": [
+      "screenshots/demo-overview.png",
+      "screenshots/demo-comparison.png",
+      "screenshots/demo-scenario.png"
+    ]
+  },
+  "remaining_checks": {
+    "owner_model_workflow_and_portfolio_review": "pending",
+    "linux_execution": "not performed; no Linux distribution available",
+    "docker_execution": "not performed; Docker unavailable",
+    "remote_ci": "configured; not executed",
+    "paid_live_ai": "not performed; requires explicit authorization",
+    "github_publication": "not performed",
+    "public_hosting": "not performed",
+    "production_uat": "not performed"
+  }
+}

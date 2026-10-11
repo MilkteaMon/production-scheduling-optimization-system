@@ -1,0 +1,1621 @@
+{
+  "dataset": {
+    "id": "32a8c28a-2699-4e16-9708-782bb4f0e198",
+    "name": "Portfolio demonstration \u00b7 30 jobs",
+    "source_kind": "synthetic",
+    "seed": 42,
+    "generator_params": {
+      "job_count": 30,
+      "machine_count": 4,
+      "seed": 42,
+      "profile": "tight",
+      "generator_version": "1.0"
+    },
+    "job_hash": "54728ff6ea8231437bd3178596ace093668f36d87107e0bc3fdb2a420d961f58",
+    "horizon_min": 1328,
+    "created_at": "2026-10-11T14:55:44.161381+00:00",
+    "jobs": [
+      {
+        "job_id": "JOB-001",
+        "processing_time_min": 48,
+        "release_time_min": 0,
+        "due_time_min": 192,
+        "priority_weight": 5
+      },
+      {
+        "job_id": "JOB-002",
+        "processing_time_min": 23,
+        "release_time_min": 0,
+        "due_time_min": 201,
+        "priority_weight": 7
+      },
+      {
+        "job_id": "JOB-003",
+        "processing_time_min": 61,
+        "release_time_min": 0,
+        "due_time_min": 143,
+        "priority_weight": 7
+      },
+      {
+        "job_id": "JOB-004",
+        "processing_time_min": 68,
+        "release_time_min": 0,
+        "due_time_min": 157,
+        "priority_weight": 5
+      },
+      {
+        "job_id": "JOB-005",
+        "processing_time_min": 14,
+        "release_time_min": 0,
+        "due_time_min": 117,
+        "priority_weight": 9
+      },
+      {
+        "job_id": "JOB-006",
+        "processing_time_min": 20,
+        "release_time_min": 0,
+        "due_time_min": 82,
+        "priority_weight": 6
+      },
+      {
+        "job_id": "JOB-007",
+        "processing_time_min": 43,
+        "release_time_min": 0,
+        "due_time_min": 96,
+        "priority_weight": 1
+      },
+      {
+        "job_id": "JOB-008",
+        "processing_time_min": 34,
+        "release_time_min": 0,
+        "due_time_min": 138,
+        "priority_weight": 8
+      },
+      {
+        "job_id": "JOB-009",
+        "processing_time_min": 40,
+        "release_time_min": 0,
+        "due_time_min": 107,
+        "priority_weight": 6
+      },
+      {
+        "job_id": "JOB-010",
+        "processing_time_min": 25,
+        "release_time_min": 0,
+        "due_time_min": 158,
+        "priority_weight": 7
+      },
+      {
+        "job_id": "JOB-011",
+        "processing_time_min": 66,
+        "release_time_min": 0,
+        "due_time_min": 165,
+        "priority_weight": 6
+      },
+      {
+        "job_id": "JOB-012",
+        "processing_time_min": 62,
+        "release_time_min": 0,
+        "due_time_min": 220,
+        "priority_weight": 6
+      },
+      {
+        "job_id": "JOB-013",
+        "processing_time_min": 42,
+        "release_time_min": 0,
+        "due_time_min": 180,
+        "priority_weight": 1
+      },
+      {
+        "job_id": "JOB-014",
+        "processing_time_min": 75,
+        "release_time_min": 0,
+        "due_time_min": 155,
+        "priority_weight": 6
+      },
+      {
+        "job_id": "JOB-015",
+        "processing_time_min": 52,
+        "release_time_min": 0,
+        "due_time_min": 210,
+        "priority_weight": 8
+      },
+      {
+        "job_id": "JOB-016",
+        "processing_time_min": 25,
+        "release_time_min": 0,
+        "due_time_min": 178,
+        "priority_weight": 4
+      },
+      {
+        "job_id": "JOB-017",
+        "processing_time_min": 50,
+        "release_time_min": 0,
+        "due_time_min": 141,
+        "priority_weight": 7
+      },
+      {
+        "job_id": "JOB-018",
+        "processing_time_min": 24,
+        "release_time_min": 0,
+        "due_time_min": 100,
+        "priority_weight": 1
+      },
+      {
+        "job_id": "JOB-019",
+        "processing_time_min": 66,
+        "release_time_min": 0,
+        "due_time_min": 201,
+        "priority_weight": 4
+      },
+      {
+        "job_id": "JOB-020",
+        "processing_time_min": 39,
+        "release_time_min": 0,
+        "due_time_min": 93,
+        "priority_weight": 5
+      },
+      {
+        "job_id": "JOB-021",
+        "processing_time_min": 37,
+        "release_time_min": 0,
+        "due_time_min": 100,
+        "priority_weight": 10
+      },
+      {
+        "job_id": "JOB-022",
+        "processing_time_min": 28,
+        "release_time_min": 0,
+        "due_time_min": 62,
+        "priority_weight": 3
+      },
+      {
+        "job_id": "JOB-023",
+        "processing_time_min": 79,
+        "release_time_min": 0,
+        "due_time_min": 230,
+        "priority_weight": 3
+      },
+      {
+        "job_id": "JOB-024",
+        "processing_time_min": 37,
+        "release_time_min": 0,
+        "due_time_min": 170,
+        "priority_weight": 5
+      },
+      {
+        "job_id": "JOB-025",
+        "processing_time_min": 32,
+        "release_time_min": 0,
+        "due_time_min": 171,
+        "priority_weight": 10
+      },
+      {
+        "job_id": "JOB-026",
+        "processing_time_min": 33,
+        "release_time_min": 0,
+        "due_time_min": 183,
+        "priority_weight": 9
+      },
+      {
+        "job_id": "JOB-027",
+        "processing_time_min": 54,
+        "release_time_min": 0,
+        "due_time_min": 156,
+        "priority_weight": 1
+      },
+      {
+        "job_id": "JOB-028",
+        "processing_time_min": 49,
+        "release_time_min": 0,
+        "due_time_min": 167,
+        "priority_weight": 3
+      },
+      {
+        "job_id": "JOB-029",
+        "processing_time_min": 51,
+        "release_time_min": 0,
+        "due_time_min": 105,
+        "priority_weight": 9
+      },
+      {
+        "job_id": "JOB-030",
+        "processing_time_min": 51,
+        "release_time_min": 0,
+        "due_time_min": 101,
+        "priority_weight": 1
+      }
+    ],
+    "scenarios": [
+      {
+        "id": "a9c8f9d9-bcf0-491c-aef8-9218b7cc3d46",
+        "dataset_id": "32a8c28a-2699-4e16-9708-782bb4f0e198",
+        "name": "Current capacity",
+        "kind": "baseline",
+        "parent_scenario_id": null,
+        "machine_count": 4,
+        "machines": [
+          {
+            "id": "a650904e-6512-443f-9bfe-6e601213c491",
+            "machine_code": "M1"
+          },
+          {
+            "id": "d5167eb7-f677-4466-b662-9978ee998816",
+            "machine_code": "M2"
+          },
+          {
+            "id": "63b42007-f8a1-4c35-88a5-75b0b2b51a0b",
+            "machine_code": "M3"
+          },
+          {
+            "id": "442b8ae9-0fc8-4ac2-9128-255df6fe1b95",
+            "machine_code": "M4"
+          }
+        ]
+      }
+    ]
+  },
+  "baseline_runs": [
+    {
+      "id": "ea1ac5f7-9063-46e5-945d-6e2531ef557d",
+      "scenario_id": "a9c8f9d9-bcf0-491c-aef8-9218b7cc3d46",
+      "method": "milp",
+      "input_hash": "2d6d7b69dcedffe1a94dca148d8547a1649ffc526446c187c568aa4a18f7a101",
+      "model_version": "1.0",
+      "execution_state": "completed",
+      "solver_config": {
+        "time_limit_seconds": 60,
+        "solver": "cbc",
+        "threads": 1,
+        "seed": 42,
+        "adapter_version": "1.1"
+      },
+      "solver_status": "time_limit",
+      "result_source": "cbc_incumbent",
+      "proven_optimal": false,
+      "has_valid_schedule": true,
+      "objective": 6072.0,
+      "best_bound": 0.0,
+      "relative_gap": 1.0,
+      "solver_runtime_seconds": 60.08420920372009,
+      "total_runtime_seconds": 60.7352050000336,
+      "validation_errors": [],
+      "diagnostics": [
+        "MIPStart values read for 615 variables.",
+        "Cbc0045I MIPStart provided solution with cost 6210",
+        "CBC 2.10.13: TimeLimit; raw objective=6072.0"
+      ],
+      "metrics": {
+        "total_jobs": 30,
+        "late_jobs": 18,
+        "total_weighted_tardiness": 6072.0,
+        "makespan_min": 424.0,
+        "window_utilization": 0.25,
+        "span_utilization": 0.7830188679245284,
+        "horizon_min": 1328,
+        "machine_count": 4
+      },
+      "created_at": "2026-10-11T14:55:44.194484+00:00",
+      "finished_at": "2026-10-11T14:56:44.936867+00:00",
+      "placements": [
+        {
+          "job_id": "JOB-024",
+          "machine_code": "M1",
+          "start_min": 0.0,
+          "completion_min": 37.0
+        },
+        {
+          "job_id": "JOB-025",
+          "machine_code": "M1",
+          "start_min": 37.0,
+          "completion_min": 69.0
+        },
+        {
+          "job_id": "JOB-016",
+          "machine_code": "M1",
+          "start_min": 69.0,
+          "completion_min": 94.0
+        },
+        {
+          "job_id": "JOB-008",
+          "machine_code": "M1",
+          "start_min": 94.0,
+          "completion_min": 128.0
+        },
+        {
+          "job_id": "JOB-006",
+          "machine_code": "M1",
+          "start_min": 128.0,
+          "completion_min": 148.0
+        },
+        {
+          "job_id": "JOB-011",
+          "machine_code": "M1",
+          "start_min": 148.0,
+          "completion_min": 214.0
+        },
+        {
+          "job_id": "JOB-015",
+          "machine_code": "M1",
+          "start_min": 214.0,
+          "completion_min": 266.0
+        },
+        {
+          "job_id": "JOB-023",
+          "machine_code": "M1",
+          "start_min": 266.0,
+          "completion_min": 345.0
+        },
+        {
+          "job_id": "JOB-026",
+          "machine_code": "M2",
+          "start_min": 0.0,
+          "completion_min": 33.0
+        },
+        {
+          "job_id": "JOB-020",
+          "machine_code": "M2",
+          "start_min": 33.0,
+          "completion_min": 72.0
+        },
+        {
+          "job_id": "JOB-009",
+          "machine_code": "M2",
+          "start_min": 72.0,
+          "completion_min": 112.0
+        },
+        {
+          "job_id": "JOB-005",
+          "machine_code": "M2",
+          "start_min": 112.0,
+          "completion_min": 126.0
+        },
+        {
+          "job_id": "JOB-010",
+          "machine_code": "M2",
+          "start_min": 126.0,
+          "completion_min": 151.0
+        },
+        {
+          "job_id": "JOB-004",
+          "machine_code": "M2",
+          "start_min": 151.0,
+          "completion_min": 219.0
+        },
+        {
+          "job_id": "JOB-021",
+          "machine_code": "M3",
+          "start_min": 0.0,
+          "completion_min": 37.0
+        },
+        {
+          "job_id": "JOB-027",
+          "machine_code": "M3",
+          "start_min": 37.0,
+          "completion_min": 91.0
+        },
+        {
+          "job_id": "JOB-018",
+          "machine_code": "M3",
+          "start_min": 91.0,
+          "completion_min": 115.0
+        },
+        {
+          "job_id": "JOB-029",
+          "machine_code": "M3",
+          "start_min": 115.0,
+          "completion_min": 166.0
+        },
+        {
+          "job_id": "JOB-028",
+          "machine_code": "M3",
+          "start_min": 166.0,
+          "completion_min": 215.0
+        },
+        {
+          "job_id": "JOB-017",
+          "machine_code": "M3",
+          "start_min": 215.0,
+          "completion_min": 265.0
+        },
+        {
+          "job_id": "JOB-019",
+          "machine_code": "M3",
+          "start_min": 265.0,
+          "completion_min": 331.0
+        },
+        {
+          "job_id": "JOB-013",
+          "machine_code": "M3",
+          "start_min": 331.0,
+          "completion_min": 373.0
+        },
+        {
+          "job_id": "JOB-030",
+          "machine_code": "M3",
+          "start_min": 373.0,
+          "completion_min": 424.0
+        },
+        {
+          "job_id": "JOB-022",
+          "machine_code": "M4",
+          "start_min": 0.0,
+          "completion_min": 28.0
+        },
+        {
+          "job_id": "JOB-001",
+          "machine_code": "M4",
+          "start_min": 28.0,
+          "completion_min": 76.0
+        },
+        {
+          "job_id": "JOB-003",
+          "machine_code": "M4",
+          "start_min": 76.0,
+          "completion_min": 137.0
+        },
+        {
+          "job_id": "JOB-007",
+          "machine_code": "M4",
+          "start_min": 137.0,
+          "completion_min": 180.0
+        },
+        {
+          "job_id": "JOB-002",
+          "machine_code": "M4",
+          "start_min": 180.0,
+          "completion_min": 203.0
+        },
+        {
+          "job_id": "JOB-014",
+          "machine_code": "M4",
+          "start_min": 203.0,
+          "completion_min": 278.0
+        },
+        {
+          "job_id": "JOB-012",
+          "machine_code": "M4",
+          "start_min": 278.0,
+          "completion_min": 340.0
+        }
+      ]
+    },
+    {
+      "id": "6796b37d-3a5f-410d-a879-e401e946e87e",
+      "scenario_id": "a9c8f9d9-bcf0-491c-aef8-9218b7cc3d46",
+      "method": "edd",
+      "input_hash": "2d6d7b69dcedffe1a94dca148d8547a1649ffc526446c187c568aa4a18f7a101",
+      "model_version": "1.0",
+      "execution_state": "completed",
+      "solver_config": {
+        "time_limit_seconds": 60,
+        "solver": "cbc",
+        "threads": 1,
+        "seed": 42,
+        "adapter_version": "1.1"
+      },
+      "solver_status": "not_run",
+      "result_source": "heuristic",
+      "proven_optimal": false,
+      "has_valid_schedule": true,
+      "objective": 6210.0,
+      "best_bound": null,
+      "relative_gap": null,
+      "solver_runtime_seconds": 0.0,
+      "total_runtime_seconds": 0.006924399989657104,
+      "validation_errors": [],
+      "diagnostics": [],
+      "metrics": {
+        "total_jobs": 30,
+        "late_jobs": 18,
+        "total_weighted_tardiness": 6210.0,
+        "makespan_min": 361.0,
+        "window_utilization": 0.25,
+        "span_utilization": 0.9196675900277008,
+        "horizon_min": 1328,
+        "machine_count": 4
+      },
+      "created_at": "2026-10-11T14:55:44.175024+00:00",
+      "finished_at": "2026-10-11T14:55:44.196301+00:00",
+      "placements": [
+        {
+          "job_id": "JOB-022",
+          "machine_code": "M1",
+          "start_min": 0.0,
+          "completion_min": 28.0
+        },
+        {
+          "job_id": "JOB-021",
+          "machine_code": "M1",
+          "start_min": 28.0,
+          "completion_min": 65.0
+        },
+        {
+          "job_id": "JOB-005",
+          "machine_code": "M1",
+          "start_min": 65.0,
+          "completion_min": 79.0
+        },
+        {
+          "job_id": "JOB-008",
+          "machine_code": "M1",
+          "start_min": 79.0,
+          "completion_min": 113.0
+        },
+        {
+          "job_id": "JOB-027",
+          "machine_code": "M1",
+          "start_min": 113.0,
+          "completion_min": 167.0
+        },
+        {
+          "job_id": "JOB-011",
+          "machine_code": "M1",
+          "start_min": 167.0,
+          "completion_min": 233.0
+        },
+        {
+          "job_id": "JOB-026",
+          "machine_code": "M1",
+          "start_min": 233.0,
+          "completion_min": 266.0
+        },
+        {
+          "job_id": "JOB-012",
+          "machine_code": "M1",
+          "start_min": 266.0,
+          "completion_min": 328.0
+        },
+        {
+          "job_id": "JOB-006",
+          "machine_code": "M2",
+          "start_min": 0.0,
+          "completion_min": 20.0
+        },
+        {
+          "job_id": "JOB-018",
+          "machine_code": "M2",
+          "start_min": 20.0,
+          "completion_min": 44.0
+        },
+        {
+          "job_id": "JOB-009",
+          "machine_code": "M2",
+          "start_min": 44.0,
+          "completion_min": 84.0
+        },
+        {
+          "job_id": "JOB-017",
+          "machine_code": "M2",
+          "start_min": 84.0,
+          "completion_min": 134.0
+        },
+        {
+          "job_id": "JOB-004",
+          "machine_code": "M2",
+          "start_min": 134.0,
+          "completion_min": 202.0
+        },
+        {
+          "job_id": "JOB-025",
+          "machine_code": "M2",
+          "start_min": 202.0,
+          "completion_min": 234.0
+        },
+        {
+          "job_id": "JOB-001",
+          "machine_code": "M2",
+          "start_min": 234.0,
+          "completion_min": 282.0
+        },
+        {
+          "job_id": "JOB-023",
+          "machine_code": "M2",
+          "start_min": 282.0,
+          "completion_min": 361.0
+        },
+        {
+          "job_id": "JOB-020",
+          "machine_code": "M3",
+          "start_min": 0.0,
+          "completion_min": 39.0
+        },
+        {
+          "job_id": "JOB-030",
+          "machine_code": "M3",
+          "start_min": 39.0,
+          "completion_min": 90.0
+        },
+        {
+          "job_id": "JOB-003",
+          "machine_code": "M3",
+          "start_min": 90.0,
+          "completion_min": 151.0
+        },
+        {
+          "job_id": "JOB-010",
+          "machine_code": "M3",
+          "start_min": 151.0,
+          "completion_min": 176.0
+        },
+        {
+          "job_id": "JOB-024",
+          "machine_code": "M3",
+          "start_min": 176.0,
+          "completion_min": 213.0
+        },
+        {
+          "job_id": "JOB-016",
+          "machine_code": "M3",
+          "start_min": 213.0,
+          "completion_min": 238.0
+        },
+        {
+          "job_id": "JOB-002",
+          "machine_code": "M3",
+          "start_min": 238.0,
+          "completion_min": 261.0
+        },
+        {
+          "job_id": "JOB-015",
+          "machine_code": "M3",
+          "start_min": 261.0,
+          "completion_min": 313.0
+        },
+        {
+          "job_id": "JOB-007",
+          "machine_code": "M4",
+          "start_min": 0.0,
+          "completion_min": 43.0
+        },
+        {
+          "job_id": "JOB-029",
+          "machine_code": "M4",
+          "start_min": 43.0,
+          "completion_min": 94.0
+        },
+        {
+          "job_id": "JOB-014",
+          "machine_code": "M4",
+          "start_min": 94.0,
+          "completion_min": 169.0
+        },
+        {
+          "job_id": "JOB-028",
+          "machine_code": "M4",
+          "start_min": 169.0,
+          "completion_min": 218.0
+        },
+        {
+          "job_id": "JOB-013",
+          "machine_code": "M4",
+          "start_min": 218.0,
+          "completion_min": 260.0
+        },
+        {
+          "job_id": "JOB-019",
+          "machine_code": "M4",
+          "start_min": 260.0,
+          "completion_min": 326.0
+        }
+      ]
+    },
+    {
+      "id": "b654a3cf-1528-445e-9c69-af80de87b4ed",
+      "scenario_id": "a9c8f9d9-bcf0-491c-aef8-9218b7cc3d46",
+      "method": "fcfs",
+      "input_hash": "2d6d7b69dcedffe1a94dca148d8547a1649ffc526446c187c568aa4a18f7a101",
+      "model_version": "1.0",
+      "execution_state": "completed",
+      "solver_config": {
+        "time_limit_seconds": 60,
+        "solver": "cbc",
+        "threads": 1,
+        "seed": 42,
+        "adapter_version": "1.1"
+      },
+      "solver_status": "not_run",
+      "result_source": "heuristic",
+      "proven_optimal": false,
+      "has_valid_schedule": true,
+      "objective": 8866.0,
+      "best_bound": null,
+      "relative_gap": null,
+      "solver_runtime_seconds": 0.0,
+      "total_runtime_seconds": 0.005824299994856119,
+      "validation_errors": [],
+      "diagnostics": [],
+      "metrics": {
+        "total_jobs": 30,
+        "late_jobs": 15,
+        "total_weighted_tardiness": 8866.0,
+        "makespan_min": 356.0,
+        "window_utilization": 0.25,
+        "span_utilization": 0.9325842696629213,
+        "horizon_min": 1328,
+        "machine_count": 4
+      },
+      "created_at": "2026-10-11T14:55:44.175007+00:00",
+      "finished_at": "2026-10-11T14:55:44.183116+00:00",
+      "placements": [
+        {
+          "job_id": "JOB-001",
+          "machine_code": "M1",
+          "start_min": 0.0,
+          "completion_min": 48.0
+        },
+        {
+          "job_id": "JOB-007",
+          "machine_code": "M1",
+          "start_min": 48.0,
+          "completion_min": 91.0
+        },
+        {
+          "job_id": "JOB-011",
+          "machine_code": "M1",
+          "start_min": 91.0,
+          "completion_min": 157.0
+        },
+        {
+          "job_id": "JOB-017",
+          "machine_code": "M1",
+          "start_min": 157.0,
+          "completion_min": 207.0
+        },
+        {
+          "job_id": "JOB-022",
+          "machine_code": "M1",
+          "start_min": 207.0,
+          "completion_min": 235.0
+        },
+        {
+          "job_id": "JOB-024",
+          "machine_code": "M1",
+          "start_min": 235.0,
+          "completion_min": 272.0
+        },
+        {
+          "job_id": "JOB-028",
+          "machine_code": "M1",
+          "start_min": 272.0,
+          "completion_min": 321.0
+        },
+        {
+          "job_id": "JOB-002",
+          "machine_code": "M2",
+          "start_min": 0.0,
+          "completion_min": 23.0
+        },
+        {
+          "job_id": "JOB-005",
+          "machine_code": "M2",
+          "start_min": 23.0,
+          "completion_min": 37.0
+        },
+        {
+          "job_id": "JOB-006",
+          "machine_code": "M2",
+          "start_min": 37.0,
+          "completion_min": 57.0
+        },
+        {
+          "job_id": "JOB-008",
+          "machine_code": "M2",
+          "start_min": 57.0,
+          "completion_min": 91.0
+        },
+        {
+          "job_id": "JOB-012",
+          "machine_code": "M2",
+          "start_min": 91.0,
+          "completion_min": 153.0
+        },
+        {
+          "job_id": "JOB-016",
+          "machine_code": "M2",
+          "start_min": 153.0,
+          "completion_min": 178.0
+        },
+        {
+          "job_id": "JOB-019",
+          "machine_code": "M2",
+          "start_min": 178.0,
+          "completion_min": 244.0
+        },
+        {
+          "job_id": "JOB-026",
+          "machine_code": "M2",
+          "start_min": 244.0,
+          "completion_min": 277.0
+        },
+        {
+          "job_id": "JOB-029",
+          "machine_code": "M2",
+          "start_min": 277.0,
+          "completion_min": 328.0
+        },
+        {
+          "job_id": "JOB-003",
+          "machine_code": "M3",
+          "start_min": 0.0,
+          "completion_min": 61.0
+        },
+        {
+          "job_id": "JOB-009",
+          "machine_code": "M3",
+          "start_min": 61.0,
+          "completion_min": 101.0
+        },
+        {
+          "job_id": "JOB-014",
+          "machine_code": "M3",
+          "start_min": 101.0,
+          "completion_min": 176.0
+        },
+        {
+          "job_id": "JOB-018",
+          "machine_code": "M3",
+          "start_min": 176.0,
+          "completion_min": 200.0
+        },
+        {
+          "job_id": "JOB-021",
+          "machine_code": "M3",
+          "start_min": 200.0,
+          "completion_min": 237.0
+        },
+        {
+          "job_id": "JOB-025",
+          "machine_code": "M3",
+          "start_min": 237.0,
+          "completion_min": 269.0
+        },
+        {
+          "job_id": "JOB-027",
+          "machine_code": "M3",
+          "start_min": 269.0,
+          "completion_min": 323.0
+        },
+        {
+          "job_id": "JOB-004",
+          "machine_code": "M4",
+          "start_min": 0.0,
+          "completion_min": 68.0
+        },
+        {
+          "job_id": "JOB-010",
+          "machine_code": "M4",
+          "start_min": 68.0,
+          "completion_min": 93.0
+        },
+        {
+          "job_id": "JOB-013",
+          "machine_code": "M4",
+          "start_min": 93.0,
+          "completion_min": 135.0
+        },
+        {
+          "job_id": "JOB-015",
+          "machine_code": "M4",
+          "start_min": 135.0,
+          "completion_min": 187.0
+        },
+        {
+          "job_id": "JOB-020",
+          "machine_code": "M4",
+          "start_min": 187.0,
+          "completion_min": 226.0
+        },
+        {
+          "job_id": "JOB-023",
+          "machine_code": "M4",
+          "start_min": 226.0,
+          "completion_min": 305.0
+        },
+        {
+          "job_id": "JOB-030",
+          "machine_code": "M4",
+          "start_min": 305.0,
+          "completion_min": 356.0
+        }
+      ]
+    }
+  ],
+  "additional_machine": {
+    "id": "83787621-9f55-4eec-8510-758f7fe1fc7a",
+    "dataset_id": "32a8c28a-2699-4e16-9708-782bb4f0e198",
+    "name": "One additional machine",
+    "kind": "additional_machine",
+    "parent_scenario_id": "a9c8f9d9-bcf0-491c-aef8-9218b7cc3d46",
+    "machine_count": 5,
+    "machines": [
+      {
+        "id": "f9b9486f-8f6c-47de-b0e3-6f1a9060a2ae",
+        "machine_code": "M1"
+      },
+      {
+        "id": "fbeef093-2cca-432a-82df-dcc35bd3d45e",
+        "machine_code": "M2"
+      },
+      {
+        "id": "839a0e83-3faf-4eeb-8e1f-c8aa85974c50",
+        "machine_code": "M3"
+      },
+      {
+        "id": "8ab30af3-cd9e-4445-b000-0e2769b67058",
+        "machine_code": "M4"
+      },
+      {
+        "id": "c7764e03-16ae-403c-a8a8-1c0e83ca8cab",
+        "machine_code": "M5"
+      }
+    ]
+  },
+  "additional_machine_runs": [
+    {
+      "id": "48fa09a9-bbb2-43c6-b9f6-bbd9ac01ac71",
+      "scenario_id": "83787621-9f55-4eec-8510-758f7fe1fc7a",
+      "method": "fcfs",
+      "input_hash": "c0069712182d6c4a2f7bc060a63ecf3bc41cb0376ae7149fd905c58826872d29",
+      "model_version": "1.0",
+      "execution_state": "completed",
+      "solver_config": {
+        "time_limit_seconds": 60,
+        "solver": "cbc",
+        "threads": 1,
+        "seed": 42,
+        "adapter_version": "1.1"
+      },
+      "solver_status": "not_run",
+      "result_source": "heuristic",
+      "proven_optimal": false,
+      "has_valid_schedule": true,
+      "objective": 5387.0,
+      "best_bound": null,
+      "relative_gap": null,
+      "solver_runtime_seconds": 0.0,
+      "total_runtime_seconds": 0.005062800017185509,
+      "validation_errors": [],
+      "diagnostics": [],
+      "metrics": {
+        "total_jobs": 30,
+        "late_jobs": 14,
+        "total_weighted_tardiness": 5387.0,
+        "makespan_min": 277.0,
+        "window_utilization": 0.2,
+        "span_utilization": 0.9588447653429603,
+        "horizon_min": 1328,
+        "machine_count": 5
+      },
+      "created_at": "2026-10-11T14:56:45.496671+00:00",
+      "finished_at": "2026-10-11T14:56:45.503624+00:00",
+      "placements": [
+        {
+          "job_id": "JOB-001",
+          "machine_code": "M1",
+          "start_min": 0.0,
+          "completion_min": 48.0
+        },
+        {
+          "job_id": "JOB-009",
+          "machine_code": "M1",
+          "start_min": 48.0,
+          "completion_min": 88.0
+        },
+        {
+          "job_id": "JOB-015",
+          "machine_code": "M1",
+          "start_min": 88.0,
+          "completion_min": 140.0
+        },
+        {
+          "job_id": "JOB-020",
+          "machine_code": "M1",
+          "start_min": 140.0,
+          "completion_min": 179.0
+        },
+        {
+          "job_id": "JOB-023",
+          "machine_code": "M1",
+          "start_min": 179.0,
+          "completion_min": 258.0
+        },
+        {
+          "job_id": "JOB-002",
+          "machine_code": "M2",
+          "start_min": 0.0,
+          "completion_min": 23.0
+        },
+        {
+          "job_id": "JOB-007",
+          "machine_code": "M2",
+          "start_min": 23.0,
+          "completion_min": 66.0
+        },
+        {
+          "job_id": "JOB-011",
+          "machine_code": "M2",
+          "start_min": 66.0,
+          "completion_min": 132.0
+        },
+        {
+          "job_id": "JOB-018",
+          "machine_code": "M2",
+          "start_min": 132.0,
+          "completion_min": 156.0
+        },
+        {
+          "job_id": "JOB-021",
+          "machine_code": "M2",
+          "start_min": 156.0,
+          "completion_min": 193.0
+        },
+        {
+          "job_id": "JOB-026",
+          "machine_code": "M2",
+          "start_min": 193.0,
+          "completion_min": 226.0
+        },
+        {
+          "job_id": "JOB-030",
+          "machine_code": "M2",
+          "start_min": 226.0,
+          "completion_min": 277.0
+        },
+        {
+          "job_id": "JOB-003",
+          "machine_code": "M3",
+          "start_min": 0.0,
+          "completion_min": 61.0
+        },
+        {
+          "job_id": "JOB-010",
+          "machine_code": "M3",
+          "start_min": 61.0,
+          "completion_min": 86.0
+        },
+        {
+          "job_id": "JOB-014",
+          "machine_code": "M3",
+          "start_min": 86.0,
+          "completion_min": 161.0
+        },
+        {
+          "job_id": "JOB-022",
+          "machine_code": "M3",
+          "start_min": 161.0,
+          "completion_min": 189.0
+        },
+        {
+          "job_id": "JOB-025",
+          "machine_code": "M3",
+          "start_min": 189.0,
+          "completion_min": 221.0
+        },
+        {
+          "job_id": "JOB-029",
+          "machine_code": "M3",
+          "start_min": 221.0,
+          "completion_min": 272.0
+        },
+        {
+          "job_id": "JOB-004",
+          "machine_code": "M4",
+          "start_min": 0.0,
+          "completion_min": 68.0
+        },
+        {
+          "job_id": "JOB-012",
+          "machine_code": "M4",
+          "start_min": 68.0,
+          "completion_min": 130.0
+        },
+        {
+          "job_id": "JOB-017",
+          "machine_code": "M4",
+          "start_min": 130.0,
+          "completion_min": 180.0
+        },
+        {
+          "job_id": "JOB-024",
+          "machine_code": "M4",
+          "start_min": 180.0,
+          "completion_min": 217.0
+        },
+        {
+          "job_id": "JOB-028",
+          "machine_code": "M4",
+          "start_min": 217.0,
+          "completion_min": 266.0
+        },
+        {
+          "job_id": "JOB-005",
+          "machine_code": "M5",
+          "start_min": 0.0,
+          "completion_min": 14.0
+        },
+        {
+          "job_id": "JOB-006",
+          "machine_code": "M5",
+          "start_min": 14.0,
+          "completion_min": 34.0
+        },
+        {
+          "job_id": "JOB-008",
+          "machine_code": "M5",
+          "start_min": 34.0,
+          "completion_min": 68.0
+        },
+        {
+          "job_id": "JOB-013",
+          "machine_code": "M5",
+          "start_min": 68.0,
+          "completion_min": 110.0
+        },
+        {
+          "job_id": "JOB-016",
+          "machine_code": "M5",
+          "start_min": 110.0,
+          "completion_min": 135.0
+        },
+        {
+          "job_id": "JOB-019",
+          "machine_code": "M5",
+          "start_min": 135.0,
+          "completion_min": 201.0
+        },
+        {
+          "job_id": "JOB-027",
+          "machine_code": "M5",
+          "start_min": 201.0,
+          "completion_min": 255.0
+        }
+      ]
+    },
+    {
+      "id": "8923345f-5a7e-4943-aa29-2b81a9991cfe",
+      "scenario_id": "83787621-9f55-4eec-8510-758f7fe1fc7a",
+      "method": "edd",
+      "input_hash": "c0069712182d6c4a2f7bc060a63ecf3bc41cb0376ae7149fd905c58826872d29",
+      "model_version": "1.0",
+      "execution_state": "completed",
+      "solver_config": {
+        "time_limit_seconds": 60,
+        "solver": "cbc",
+        "threads": 1,
+        "seed": 42,
+        "adapter_version": "1.1"
+      },
+      "solver_status": "not_run",
+      "result_source": "heuristic",
+      "proven_optimal": false,
+      "has_valid_schedule": true,
+      "objective": 2215.0,
+      "best_bound": null,
+      "relative_gap": null,
+      "solver_runtime_seconds": 0.0,
+      "total_runtime_seconds": 0.005311199987772852,
+      "validation_errors": [],
+      "diagnostics": [],
+      "metrics": {
+        "total_jobs": 30,
+        "late_jobs": 14,
+        "total_weighted_tardiness": 2215.0,
+        "makespan_min": 294.0,
+        "window_utilization": 0.2,
+        "span_utilization": 0.9034013605442177,
+        "horizon_min": 1328,
+        "machine_count": 5
+      },
+      "created_at": "2026-10-11T14:56:45.496684+00:00",
+      "finished_at": "2026-10-11T14:56:45.513736+00:00",
+      "placements": [
+        {
+          "job_id": "JOB-022",
+          "machine_code": "M1",
+          "start_min": 0.0,
+          "completion_min": 28.0
+        },
+        {
+          "job_id": "JOB-029",
+          "machine_code": "M1",
+          "start_min": 28.0,
+          "completion_min": 79.0
+        },
+        {
+          "job_id": "JOB-014",
+          "machine_code": "M1",
+          "start_min": 79.0,
+          "completion_min": 154.0
+        },
+        {
+          "job_id": "JOB-025",
+          "machine_code": "M1",
+          "start_min": 154.0,
+          "completion_min": 186.0
+        },
+        {
+          "job_id": "JOB-002",
+          "machine_code": "M1",
+          "start_min": 186.0,
+          "completion_min": 209.0
+        },
+        {
+          "job_id": "JOB-015",
+          "machine_code": "M1",
+          "start_min": 209.0,
+          "completion_min": 261.0
+        },
+        {
+          "job_id": "JOB-006",
+          "machine_code": "M2",
+          "start_min": 0.0,
+          "completion_min": 20.0
+        },
+        {
+          "job_id": "JOB-021",
+          "machine_code": "M2",
+          "start_min": 20.0,
+          "completion_min": 57.0
+        },
+        {
+          "job_id": "JOB-008",
+          "machine_code": "M2",
+          "start_min": 57.0,
+          "completion_min": 91.0
+        },
+        {
+          "job_id": "JOB-004",
+          "machine_code": "M2",
+          "start_min": 91.0,
+          "completion_min": 159.0
+        },
+        {
+          "job_id": "JOB-016",
+          "machine_code": "M2",
+          "start_min": 159.0,
+          "completion_min": 184.0
+        },
+        {
+          "job_id": "JOB-001",
+          "machine_code": "M2",
+          "start_min": 184.0,
+          "completion_min": 232.0
+        },
+        {
+          "job_id": "JOB-020",
+          "machine_code": "M3",
+          "start_min": 0.0,
+          "completion_min": 39.0
+        },
+        {
+          "job_id": "JOB-009",
+          "machine_code": "M3",
+          "start_min": 39.0,
+          "completion_min": 79.0
+        },
+        {
+          "job_id": "JOB-027",
+          "machine_code": "M3",
+          "start_min": 79.0,
+          "completion_min": 133.0
+        },
+        {
+          "job_id": "JOB-028",
+          "machine_code": "M3",
+          "start_min": 133.0,
+          "completion_min": 182.0
+        },
+        {
+          "job_id": "JOB-026",
+          "machine_code": "M3",
+          "start_min": 182.0,
+          "completion_min": 215.0
+        },
+        {
+          "job_id": "JOB-012",
+          "machine_code": "M3",
+          "start_min": 215.0,
+          "completion_min": 277.0
+        },
+        {
+          "job_id": "JOB-007",
+          "machine_code": "M4",
+          "start_min": 0.0,
+          "completion_min": 43.0
+        },
+        {
+          "job_id": "JOB-005",
+          "machine_code": "M4",
+          "start_min": 43.0,
+          "completion_min": 57.0
+        },
+        {
+          "job_id": "JOB-017",
+          "machine_code": "M4",
+          "start_min": 57.0,
+          "completion_min": 107.0
+        },
+        {
+          "job_id": "JOB-010",
+          "machine_code": "M4",
+          "start_min": 107.0,
+          "completion_min": 132.0
+        },
+        {
+          "job_id": "JOB-011",
+          "machine_code": "M4",
+          "start_min": 132.0,
+          "completion_min": 198.0
+        },
+        {
+          "job_id": "JOB-019",
+          "machine_code": "M4",
+          "start_min": 198.0,
+          "completion_min": 264.0
+        },
+        {
+          "job_id": "JOB-018",
+          "machine_code": "M5",
+          "start_min": 0.0,
+          "completion_min": 24.0
+        },
+        {
+          "job_id": "JOB-030",
+          "machine_code": "M5",
+          "start_min": 24.0,
+          "completion_min": 75.0
+        },
+        {
+          "job_id": "JOB-003",
+          "machine_code": "M5",
+          "start_min": 75.0,
+          "completion_min": 136.0
+        },
+        {
+          "job_id": "JOB-024",
+          "machine_code": "M5",
+          "start_min": 136.0,
+          "completion_min": 173.0
+        },
+        {
+          "job_id": "JOB-013",
+          "machine_code": "M5",
+          "start_min": 173.0,
+          "completion_min": 215.0
+        },
+        {
+          "job_id": "JOB-023",
+          "machine_code": "M5",
+          "start_min": 215.0,
+          "completion_min": 294.0
+        }
+      ]
+    },
+    {
+      "id": "cce95254-5e66-446b-a22d-4aa22071556a",
+      "scenario_id": "83787621-9f55-4eec-8510-758f7fe1fc7a",
+      "method": "milp",
+      "input_hash": "c0069712182d6c4a2f7bc060a63ecf3bc41cb0376ae7149fd905c58826872d29",
+      "model_version": "1.0",
+      "execution_state": "completed",
+      "solver_config": {
+        "time_limit_seconds": 60,
+        "solver": "cbc",
+        "threads": 1,
+        "seed": 42,
+        "adapter_version": "1.1"
+      },
+      "solver_status": "time_limit",
+      "result_source": "cbc_incumbent",
+      "proven_optimal": false,
+      "has_valid_schedule": true,
+      "objective": 2215.0,
+      "best_bound": 0.0,
+      "relative_gap": 1.0,
+      "solver_runtime_seconds": 60.08802366256714,
+      "total_runtime_seconds": 60.994687900005374,
+      "validation_errors": [],
+      "diagnostics": [
+        "MIPStart values read for 645 variables.",
+        "Cbc0045I MIPStart provided solution with cost 2215",
+        "CBC 2.10.13: TimeLimit; raw objective=2215.0"
+      ],
+      "metrics": {
+        "total_jobs": 30,
+        "late_jobs": 14,
+        "total_weighted_tardiness": 2215.0,
+        "makespan_min": 294.0,
+        "window_utilization": 0.2,
+        "span_utilization": 0.9034013605442177,
+        "horizon_min": 1328,
+        "machine_count": 5
+      },
+      "created_at": "2026-10-11T14:56:45.496690+00:00",
+      "finished_at": "2026-10-11T14:57:46.513048+00:00",
+      "placements": [
+        {
+          "job_id": "JOB-022",
+          "machine_code": "M1",
+          "start_min": 0.0,
+          "completion_min": 28.0
+        },
+        {
+          "job_id": "JOB-029",
+          "machine_code": "M1",
+          "start_min": 28.0,
+          "completion_min": 79.0
+        },
+        {
+          "job_id": "JOB-014",
+          "machine_code": "M1",
+          "start_min": 79.0,
+          "completion_min": 154.0
+        },
+        {
+          "job_id": "JOB-025",
+          "machine_code": "M1",
+          "start_min": 154.0,
+          "completion_min": 186.0
+        },
+        {
+          "job_id": "JOB-002",
+          "machine_code": "M1",
+          "start_min": 186.0,
+          "completion_min": 209.0
+        },
+        {
+          "job_id": "JOB-015",
+          "machine_code": "M1",
+          "start_min": 209.0,
+          "completion_min": 261.0
+        },
+        {
+          "job_id": "JOB-006",
+          "machine_code": "M2",
+          "start_min": 0.0,
+          "completion_min": 20.0
+        },
+        {
+          "job_id": "JOB-021",
+          "machine_code": "M2",
+          "start_min": 20.0,
+          "completion_min": 57.0
+        },
+        {
+          "job_id": "JOB-008",
+          "machine_code": "M2",
+          "start_min": 57.0,
+          "completion_min": 91.0
+        },
+        {
+          "job_id": "JOB-004",
+          "machine_code": "M2",
+          "start_min": 91.0,
+          "completion_min": 159.0
+        },
+        {
+          "job_id": "JOB-016",
+          "machine_code": "M2",
+          "start_min": 159.0,
+          "completion_min": 184.0
+        },
+        {
+          "job_id": "JOB-001",
+          "machine_code": "M2",
+          "start_min": 184.0,
+          "completion_min": 232.0
+        },
+        {
+          "job_id": "JOB-020",
+          "machine_code": "M3",
+          "start_min": 0.0,
+          "completion_min": 39.0
+        },
+        {
+          "job_id": "JOB-009",
+          "machine_code": "M3",
+          "start_min": 39.0,
+          "completion_min": 79.0
+        },
+        {
+          "job_id": "JOB-027",
+          "machine_code": "M3",
+          "start_min": 79.0,
+          "completion_min": 133.0
+        },
+        {
+          "job_id": "JOB-028",
+          "machine_code": "M3",
+          "start_min": 133.0,
+          "completion_min": 182.0
+        },
+        {
+          "job_id": "JOB-026",
+          "machine_code": "M3",
+          "start_min": 182.0,
+          "completion_min": 215.0
+        },
+        {
+          "job_id": "JOB-012",
+          "machine_code": "M3",
+          "start_min": 215.0,
+          "completion_min": 277.0
+        },
+        {
+          "job_id": "JOB-007",
+          "machine_code": "M4",
+          "start_min": 0.0,
+          "completion_min": 43.0
+        },
+        {
+          "job_id": "JOB-005",
+          "machine_code": "M4",
+          "start_min": 43.0,
+          "completion_min": 57.0
+        },
+        {
+          "job_id": "JOB-017",
+          "machine_code": "M4",
+          "start_min": 57.0,
+          "completion_min": 107.0
+        },
+        {
+          "job_id": "JOB-010",
+          "machine_code": "M4",
+          "start_min": 107.0,
+          "completion_min": 132.0
+        },
+        {
+          "job_id": "JOB-011",
+          "machine_code": "M4",
+          "start_min": 132.0,
+          "completion_min": 198.0
+        },
+        {
+          "job_id": "JOB-019",
+          "machine_code": "M4",
+          "start_min": 198.0,
+          "completion_min": 264.0
+        },
+        {
+          "job_id": "JOB-018",
+          "machine_code": "M5",
+          "start_min": 0.0,
+          "completion_min": 24.0
+        },
+        {
+          "job_id": "JOB-030",
+          "machine_code": "M5",
+          "start_min": 24.0,
+          "completion_min": 75.0
+        },
+        {
+          "job_id": "JOB-003",
+          "machine_code": "M5",
+          "start_min": 75.0,
+          "completion_min": 136.0
+        },
+        {
+          "job_id": "JOB-024",
+          "machine_code": "M5",
+          "start_min": 136.0,
+          "completion_min": 173.0
+        },
+        {
+          "job_id": "JOB-013",
+          "machine_code": "M5",
+          "start_min": 173.0,
+          "completion_min": 215.0
+        },
+        {
+          "job_id": "JOB-023",
+          "machine_code": "M5",
+          "start_min": 215.0,
+          "completion_min": 294.0
+        }
+      ]
+    }
+  ],
+  "optimization_run_id": "ea1ac5f7-9063-46e5-945d-6e2531ef557d"
+}

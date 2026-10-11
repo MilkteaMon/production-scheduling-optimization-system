@@ -1,0 +1,41 @@
+{
+  "checked_at_utc": "2026-10-11T21:03:00.661941+00:00",
+  "application": "Production Scheduling Optimization System",
+  "outputs": [
+    "interactive Web scheduling dashboard",
+    "Power BI compatible CSV, Power Query and DAX exports"
+  ],
+  "extension": "optional AI copilot; disabled by default; live paid behavior unverified",
+  "checks": {
+    "backend": {
+      "passed": 52,
+      "evidence": "checks/rename-backend.xml"
+    },
+    "frontend_unit": {
+      "passed": 8
+    },
+    "browser": {
+      "startTime": "2026-10-11T21:00:36.947Z",
+      "duration": 60374.331000000006,
+      "expected": 14,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0,
+      "evidence": "checks/rename-browser.json"
+    },
+    "ruff": "passed",
+    "eslint": "passed",
+    "production_build": "passed",
+    "ui_title_and_capability_text": "verified",
+    "live_api_product_identity": "verified",
+    "live_power_bi_package_identity": "verified"
+  },
+  "preservation": {
+    "datasets": 33,
+    "schedule_runs": 142,
+    "counts_and_dataset_hashes_unchanged": true,
+    "stored_identifiers_and_internal_paths_retained": true
+  },
+  "git_operations_performed": false,
+  "paid_ai_requests": false
+}

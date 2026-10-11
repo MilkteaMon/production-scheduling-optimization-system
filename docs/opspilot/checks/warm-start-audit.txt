@@ -1,0 +1,11 @@
+Initial absolute-path adapter (unaccepted start):
+command line - C:\Users\12418\Documents\ChatGPT\Independent Projects\runtime\solvers\bin\cbc.exe C:\Users\12418\AppData\Local\Temp\opspilot-audit-k34zulcz\audit-pulp.mps -mips C:\Users\12418\AppData\Local\Temp\opspilot-audit-k34zulcz\audit-pulp.mst -sec 2 -ratio 0 -allow 0 -timeMode elapsed -solve -printingOptions all -solution C:\Users\12418\AppData\Local\Temp\opspilot-audit-k34zulcz\audit-pulp.sol (default strategy 1)
+opening mipstart file .\C:\Users\12418\AppData\Local\Temp\opspilot-audit-k34zulcz\audit-pulp.mst.
+Result - Stopped on time limit
+
+Corrected relative-path adapter (accepted start):
+command line - C:\Users\12418\Documents\ChatGPT\Independent Projects\runtime\solvers\bin\cbc.exe .opspilot-cbc-d5as41oe\model-pulp.mps -mips .opspilot-cbc-d5as41oe\model-pulp.mst -sec 2 -ratio 0 -allow 0 -timeMode elapsed -solve -printingOptions all -solution .opspilot-cbc-d5as41oe\model-pulp.sol (default strategy 1)
+opening mipstart file .\.opspilot-cbc-d5as41oe\model-pulp.mst.
+MIPStart values read for 770 variables.
+Cbc0045I MIPStart provided solution with cost 0
+Result - Optimal solution found

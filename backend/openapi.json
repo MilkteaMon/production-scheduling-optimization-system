@@ -1,0 +1,2035 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Production Scheduling Optimization System",
+    "description": "Verified production scheduling with an interactive Web dashboard, Power BI data exports, and an optional AI copilot extension.",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/api/v1/health": {
+      "get": {
+        "summary": "Health",
+        "operationId": "health_api_v1_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthRead"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/datasets": {
+      "get": {
+        "summary": "Datasets",
+        "operationId": "datasets_api_v1_datasets_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/DatasetRead"
+                  },
+                  "type": "array",
+                  "title": "Response Datasets Api V1 Datasets Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/datasets/{dataset_id}": {
+      "get": {
+        "summary": "Dataset",
+        "operationId": "dataset_api_v1_datasets__dataset_id__get",
+        "parameters": [
+          {
+            "name": "dataset_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Dataset Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DatasetRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/datasets/{dataset_id}/visibility": {
+      "patch": {
+        "summary": "Dataset Visibility",
+        "operationId": "dataset_visibility_api_v1_datasets__dataset_id__visibility_patch",
+        "parameters": [
+          {
+            "name": "dataset_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Dataset Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DatasetVisibilityRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DatasetRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/datasets/generate": {
+      "post": {
+        "summary": "Generate",
+        "operationId": "generate_api_v1_datasets_generate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DatasetRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/datasets/validate-csv": {
+      "post": {
+        "summary": "Validate",
+        "operationId": "validate_api_v1_datasets_validate_csv_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_validate_api_v1_datasets_validate_csv_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PreviewRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/datasets/import": {
+      "post": {
+        "summary": "Import Csv",
+        "operationId": "import_csv_api_v1_datasets_import_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_import_csv_api_v1_datasets_import_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DatasetRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/datasets/{dataset_id}/scenarios": {
+      "get": {
+        "summary": "Scenarios",
+        "operationId": "scenarios_api_v1_datasets__dataset_id__scenarios_get",
+        "parameters": [
+          {
+            "name": "dataset_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Dataset Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ScenarioRead"
+                  },
+                  "title": "Response Scenarios Api V1 Datasets  Dataset Id  Scenarios Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Add Machine",
+        "operationId": "add_machine_api_v1_datasets__dataset_id__scenarios_post",
+        "parameters": [
+          {
+            "name": "dataset_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Dataset Id"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScenarioRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/scenarios/{scenario_id}/runs": {
+      "get": {
+        "summary": "Runs",
+        "operationId": "runs_api_v1_scenarios__scenario_id__runs_get",
+        "parameters": [
+          {
+            "name": "scenario_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Scenario Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RunRead"
+                  },
+                  "title": "Response Runs Api V1 Scenarios  Scenario Id  Runs Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Queue Runs",
+        "operationId": "queue_runs_api_v1_scenarios__scenario_id__runs_post",
+        "parameters": [
+          {
+            "name": "scenario_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Scenario Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RunRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueuedRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/runs/{run_id}": {
+      "get": {
+        "summary": "Run",
+        "operationId": "run_api_v1_runs__run_id__get",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/runs/{run_id}/late-jobs": {
+      "get": {
+        "summary": "Late",
+        "operationId": "late_api_v1_runs__run_id__late_jobs_get",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalyticsRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/runs/{run_id}/machine-utilization": {
+      "get": {
+        "summary": "Utilization",
+        "operationId": "utilization_api_v1_runs__run_id__machine_utilization_get",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalyticsRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/comparisons": {
+      "post": {
+        "summary": "Compare",
+        "operationId": "compare_api_v1_comparisons_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CompareRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ComparisonRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/runs/{run_id}/exports/{table}.csv": {
+      "get": {
+        "summary": "Export",
+        "operationId": "export_api_v1_runs__run_id__exports__table__csv_get",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          },
+          {
+            "name": "table",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Table"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/exports/power-bi": {
+      "post": {
+        "summary": "Export Bundle",
+        "operationId": "export_bundle_api_v1_exports_power_bi_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExportBundleRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/copilot/query": {
+      "post": {
+        "summary": "Copilot",
+        "operationId": "copilot_api_v1_copilot_query_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CopilotRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CopilotRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AnalyticsRead": {
+        "properties": {
+          "run_id": {
+            "type": "string",
+            "title": "Run Id"
+          },
+          "dataset_id": {
+            "type": "string",
+            "title": "Dataset Id"
+          },
+          "scenario_id": {
+            "type": "string",
+            "title": "Scenario Id"
+          },
+          "method": {
+            "type": "string",
+            "enum": [
+              "fcfs",
+              "edd",
+              "milp"
+            ],
+            "title": "Method"
+          },
+          "solver_status": {
+            "type": "string",
+            "enum": [
+              "optimal",
+              "time_limit",
+              "gap_limit",
+              "infeasible",
+              "unbounded",
+              "error",
+              "not_run"
+            ],
+            "title": "Solver Status"
+          },
+          "result_source": {
+            "type": "string",
+            "enum": [
+              "heuristic",
+              "cbc_incumbent",
+              "heuristic_fallback"
+            ],
+            "title": "Result Source"
+          },
+          "proven_optimal": {
+            "type": "boolean",
+            "title": "Proven Optimal"
+          },
+          "rows": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Rows"
+          }
+        },
+        "type": "object",
+        "required": [
+          "run_id",
+          "dataset_id",
+          "scenario_id",
+          "method",
+          "solver_status",
+          "result_source",
+          "proven_optimal",
+          "rows"
+        ],
+        "title": "AnalyticsRead"
+      },
+      "Body_import_csv_api_v1_datasets_import_post": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "contentMediaType": "application/octet-stream",
+            "title": "File"
+          },
+          "machine_count": {
+            "type": "integer",
+            "title": "Machine Count"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "confirmed": {
+            "type": "boolean",
+            "title": "Confirmed",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "file",
+          "machine_count",
+          "name"
+        ],
+        "title": "Body_import_csv_api_v1_datasets_import_post"
+      },
+      "Body_validate_api_v1_datasets_validate_csv_post": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "contentMediaType": "application/octet-stream",
+            "title": "File"
+          },
+          "machine_count": {
+            "type": "integer",
+            "title": "Machine Count"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file",
+          "machine_count"
+        ],
+        "title": "Body_validate_api_v1_datasets_validate_csv_post"
+      },
+      "CompareRequest": {
+        "properties": {
+          "run_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 6,
+            "minItems": 2,
+            "title": "Run Ids"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "run_ids"
+        ],
+        "title": "CompareRequest"
+      },
+      "ComparedRun": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "scenario_id": {
+            "type": "string",
+            "title": "Scenario Id"
+          },
+          "method": {
+            "type": "string",
+            "enum": [
+              "fcfs",
+              "edd",
+              "milp"
+            ],
+            "title": "Method"
+          },
+          "input_hash": {
+            "type": "string",
+            "title": "Input Hash"
+          },
+          "model_version": {
+            "type": "string",
+            "title": "Model Version"
+          },
+          "execution_state": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "running",
+              "completed",
+              "failed",
+              "interrupted"
+            ],
+            "title": "Execution State"
+          },
+          "solver_config": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Solver Config"
+          },
+          "solver_status": {
+            "type": "string",
+            "enum": [
+              "optimal",
+              "time_limit",
+              "gap_limit",
+              "infeasible",
+              "unbounded",
+              "error",
+              "not_run"
+            ],
+            "title": "Solver Status"
+          },
+          "result_source": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "heuristic",
+                  "cbc_incumbent",
+                  "heuristic_fallback"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Result Source"
+          },
+          "proven_optimal": {
+            "type": "boolean",
+            "title": "Proven Optimal"
+          },
+          "has_valid_schedule": {
+            "type": "boolean",
+            "title": "Has Valid Schedule"
+          },
+          "objective": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Objective"
+          },
+          "best_bound": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Best Bound"
+          },
+          "relative_gap": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Relative Gap"
+          },
+          "solver_runtime_seconds": {
+            "type": "number",
+            "title": "Solver Runtime Seconds"
+          },
+          "total_runtime_seconds": {
+            "type": "number",
+            "title": "Total Runtime Seconds"
+          },
+          "validation_errors": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Validation Errors"
+          },
+          "diagnostics": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Diagnostics"
+          },
+          "metrics": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/KPI"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "title": "Created At"
+          },
+          "finished_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Finished At"
+          },
+          "placements": {
+            "items": {
+              "$ref": "#/components/schemas/Placement"
+            },
+            "type": "array",
+            "title": "Placements"
+          },
+          "machine_count": {
+            "type": "integer",
+            "title": "Machine Count"
+          },
+          "scenario_name": {
+            "type": "string",
+            "title": "Scenario Name"
+          },
+          "changes": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ReductionRead"
+            },
+            "type": "object",
+            "title": "Changes"
+          },
+          "window_utilization_change_pp": {
+            "type": "number",
+            "title": "Window Utilization Change Pp"
+          },
+          "span_utilization_change_pp": {
+            "type": "number",
+            "title": "Span Utilization Change Pp"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "scenario_id",
+          "method",
+          "input_hash",
+          "model_version",
+          "execution_state",
+          "solver_config",
+          "solver_status",
+          "result_source",
+          "proven_optimal",
+          "has_valid_schedule",
+          "objective",
+          "best_bound",
+          "relative_gap",
+          "solver_runtime_seconds",
+          "total_runtime_seconds",
+          "validation_errors",
+          "diagnostics",
+          "metrics",
+          "created_at",
+          "finished_at",
+          "placements",
+          "machine_count",
+          "scenario_name",
+          "changes",
+          "window_utilization_change_pp",
+          "span_utilization_change_pp"
+        ],
+        "title": "ComparedRun"
+      },
+      "ComparisonRead": {
+        "properties": {
+          "baseline_run_id": {
+            "type": "string",
+            "title": "Baseline Run Id"
+          },
+          "job_hash": {
+            "type": "string",
+            "title": "Job Hash"
+          },
+          "horizon_min": {
+            "type": "integer",
+            "title": "Horizon Min"
+          },
+          "runs": {
+            "items": {
+              "$ref": "#/components/schemas/ComparedRun"
+            },
+            "type": "array",
+            "title": "Runs"
+          }
+        },
+        "type": "object",
+        "required": [
+          "baseline_run_id",
+          "job_hash",
+          "horizon_min",
+          "runs"
+        ],
+        "title": "ComparisonRead"
+      },
+      "CopilotRead": {
+        "properties": {
+          "query_id": {
+            "type": "string",
+            "title": "Query Id"
+          },
+          "facts": {
+            "items": {
+              "$ref": "#/components/schemas/FactRead"
+            },
+            "type": "array",
+            "title": "Facts"
+          },
+          "interpretation": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Interpretation"
+          },
+          "tool_trace": {
+            "items": {
+              "$ref": "#/components/schemas/EvidenceRead"
+            },
+            "type": "array",
+            "title": "Tool Trace"
+          },
+          "pending_run_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Pending Run Ids"
+          },
+          "fallback": {
+            "type": "boolean",
+            "title": "Fallback"
+          }
+        },
+        "type": "object",
+        "required": [
+          "query_id",
+          "facts",
+          "interpretation",
+          "tool_trace",
+          "pending_run_ids",
+          "fallback"
+        ],
+        "title": "CopilotRead"
+      },
+      "CopilotRequest": {
+        "properties": {
+          "scenario_id": {
+            "type": "string",
+            "title": "Scenario Id"
+          },
+          "run_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Run Id"
+          },
+          "question": {
+            "type": "string",
+            "maxLength": 2000,
+            "minLength": 1,
+            "title": "Question"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "scenario_id",
+          "question"
+        ],
+        "title": "CopilotRequest"
+      },
+      "DatasetRead": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "source_kind": {
+            "type": "string",
+            "title": "Source Kind"
+          },
+          "seed": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Seed"
+          },
+          "generator_params": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Generator Params"
+          },
+          "job_hash": {
+            "type": "string",
+            "title": "Job Hash"
+          },
+          "horizon_min": {
+            "type": "integer",
+            "title": "Horizon Min"
+          },
+          "created_at": {
+            "type": "string",
+            "title": "Created At"
+          },
+          "jobs": {
+            "items": {
+              "$ref": "#/components/schemas/Job"
+            },
+            "type": "array",
+            "title": "Jobs"
+          },
+          "scenarios": {
+            "items": {
+              "$ref": "#/components/schemas/ScenarioRead"
+            },
+            "type": "array",
+            "title": "Scenarios"
+          },
+          "is_archived": {
+            "type": "boolean",
+            "title": "Is Archived"
+          },
+          "is_test": {
+            "type": "boolean",
+            "title": "Is Test"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "source_kind",
+          "seed",
+          "generator_params",
+          "job_hash",
+          "horizon_min",
+          "created_at",
+          "jobs",
+          "scenarios",
+          "is_archived",
+          "is_test"
+        ],
+        "title": "DatasetRead"
+      },
+      "DatasetVisibilityRequest": {
+        "properties": {
+          "is_archived": {
+            "type": "boolean",
+            "title": "Is Archived"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "is_archived"
+        ],
+        "title": "DatasetVisibilityRequest"
+      },
+      "EvidenceRead": {
+        "properties": {
+          "evidence_id": {
+            "type": "string",
+            "title": "Evidence Id"
+          },
+          "tool": {
+            "type": "string",
+            "title": "Tool"
+          },
+          "data": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Data"
+          },
+          "facts": {
+            "items": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Facts"
+          }
+        },
+        "type": "object",
+        "required": [
+          "evidence_id",
+          "tool",
+          "data",
+          "facts"
+        ],
+        "title": "EvidenceRead"
+      },
+      "ExportBundleRequest": {
+        "properties": {
+          "run_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 6,
+            "minItems": 1,
+            "title": "Run Ids"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "run_ids"
+        ],
+        "title": "ExportBundleRequest"
+      },
+      "FactRead": {
+        "properties": {
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "value": {
+            "type": "string",
+            "title": "Value"
+          },
+          "unit": {
+            "type": "string",
+            "title": "Unit"
+          },
+          "evidence_id": {
+            "type": "string",
+            "title": "Evidence Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "label",
+          "value",
+          "unit",
+          "evidence_id"
+        ],
+        "title": "FactRead"
+      },
+      "GenerateRequest": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Name",
+            "default": "Synthetic production demo"
+          },
+          "job_count": {
+            "type": "integer",
+            "maximum": 50.0,
+            "minimum": 1.0,
+            "title": "Job Count",
+            "default": 30
+          },
+          "machine_count": {
+            "type": "integer",
+            "maximum": 5.0,
+            "minimum": 1.0,
+            "title": "Machine Count",
+            "default": 4
+          },
+          "seed": {
+            "type": "integer",
+            "maximum": 2147483647.0,
+            "minimum": 0.0,
+            "title": "Seed",
+            "default": 42
+          },
+          "profile": {
+            "type": "string",
+            "enum": [
+              "relaxed",
+              "tight",
+              "staggered"
+            ],
+            "title": "Profile",
+            "default": "tight"
+          },
+          "confirmed": {
+            "type": "boolean",
+            "title": "Confirmed",
+            "default": false
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "GenerateRequest"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HealthRead": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "database_available": {
+            "type": "boolean",
+            "title": "Database Available"
+          },
+          "solver_available": {
+            "type": "boolean",
+            "title": "Solver Available"
+          },
+          "ai_available": {
+            "type": "boolean",
+            "title": "Ai Available"
+          },
+          "ai_enabled": {
+            "type": "boolean",
+            "title": "Ai Enabled"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "database_available",
+          "solver_available",
+          "ai_available",
+          "ai_enabled",
+          "version"
+        ],
+        "title": "HealthRead"
+      },
+      "Job": {
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1,
+            "pattern": "^[A-Za-z0-9_-]+$",
+            "title": "Job Id"
+          },
+          "processing_time_min": {
+            "type": "integer",
+            "maximum": 10080.0,
+            "exclusiveMinimum": 0.0,
+            "title": "Processing Time Min"
+          },
+          "release_time_min": {
+            "type": "integer",
+            "maximum": 525600.0,
+            "minimum": 0.0,
+            "title": "Release Time Min"
+          },
+          "due_time_min": {
+            "type": "integer",
+            "maximum": 1051200.0,
+            "minimum": 0.0,
+            "title": "Due Time Min"
+          },
+          "priority_weight": {
+            "type": "integer",
+            "maximum": 10.0,
+            "minimum": 1.0,
+            "title": "Priority Weight"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "job_id",
+          "processing_time_min",
+          "release_time_min",
+          "due_time_min",
+          "priority_weight"
+        ],
+        "title": "Job"
+      },
+      "KPI": {
+        "properties": {
+          "total_jobs": {
+            "type": "integer",
+            "title": "Total Jobs"
+          },
+          "late_jobs": {
+            "type": "integer",
+            "title": "Late Jobs"
+          },
+          "total_weighted_tardiness": {
+            "type": "number",
+            "title": "Total Weighted Tardiness"
+          },
+          "makespan_min": {
+            "type": "number",
+            "title": "Makespan Min"
+          },
+          "window_utilization": {
+            "type": "number",
+            "title": "Window Utilization"
+          },
+          "span_utilization": {
+            "type": "number",
+            "title": "Span Utilization"
+          },
+          "horizon_min": {
+            "type": "integer",
+            "title": "Horizon Min"
+          },
+          "machine_count": {
+            "type": "integer",
+            "title": "Machine Count"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "total_jobs",
+          "late_jobs",
+          "total_weighted_tardiness",
+          "makespan_min",
+          "window_utilization",
+          "span_utilization",
+          "horizon_min",
+          "machine_count"
+        ],
+        "title": "KPI"
+      },
+      "MachineRead": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "machine_code": {
+            "type": "string",
+            "title": "Machine Code"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "machine_code"
+        ],
+        "title": "MachineRead"
+      },
+      "Placement": {
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "title": "Job Id"
+          },
+          "machine_code": {
+            "type": "string",
+            "title": "Machine Code"
+          },
+          "start_min": {
+            "type": "number",
+            "title": "Start Min"
+          },
+          "completion_min": {
+            "type": "number",
+            "title": "Completion Min"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "job_id",
+          "machine_code",
+          "start_min",
+          "completion_min"
+        ],
+        "title": "Placement"
+      },
+      "PreviewRead": {
+        "properties": {
+          "valid": {
+            "type": "boolean",
+            "title": "Valid"
+          },
+          "errors": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationErrorRead"
+            },
+            "type": "array",
+            "title": "Errors"
+          },
+          "jobs": {
+            "items": {
+              "$ref": "#/components/schemas/Job"
+            },
+            "type": "array",
+            "title": "Jobs"
+          },
+          "total_jobs": {
+            "type": "integer",
+            "title": "Total Jobs",
+            "default": 0
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Warnings",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "valid",
+          "errors",
+          "jobs"
+        ],
+        "title": "PreviewRead"
+      },
+      "QueuedRead": {
+        "properties": {
+          "run_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Run Ids"
+          }
+        },
+        "type": "object",
+        "required": [
+          "run_ids"
+        ],
+        "title": "QueuedRead"
+      },
+      "ReductionRead": {
+        "properties": {
+          "absolute_reduction": {
+            "type": "number",
+            "title": "Absolute Reduction"
+          },
+          "percentage_reduction": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Percentage Reduction"
+          }
+        },
+        "type": "object",
+        "required": [
+          "absolute_reduction",
+          "percentage_reduction"
+        ],
+        "title": "ReductionRead"
+      },
+      "RunRead": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "scenario_id": {
+            "type": "string",
+            "title": "Scenario Id"
+          },
+          "method": {
+            "type": "string",
+            "enum": [
+              "fcfs",
+              "edd",
+              "milp"
+            ],
+            "title": "Method"
+          },
+          "input_hash": {
+            "type": "string",
+            "title": "Input Hash"
+          },
+          "model_version": {
+            "type": "string",
+            "title": "Model Version"
+          },
+          "execution_state": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "running",
+              "completed",
+              "failed",
+              "interrupted"
+            ],
+            "title": "Execution State"
+          },
+          "solver_config": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Solver Config"
+          },
+          "solver_status": {
+            "type": "string",
+            "enum": [
+              "optimal",
+              "time_limit",
+              "gap_limit",
+              "infeasible",
+              "unbounded",
+              "error",
+              "not_run"
+            ],
+            "title": "Solver Status"
+          },
+          "result_source": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "heuristic",
+                  "cbc_incumbent",
+                  "heuristic_fallback"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Result Source"
+          },
+          "proven_optimal": {
+            "type": "boolean",
+            "title": "Proven Optimal"
+          },
+          "has_valid_schedule": {
+            "type": "boolean",
+            "title": "Has Valid Schedule"
+          },
+          "objective": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Objective"
+          },
+          "best_bound": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Best Bound"
+          },
+          "relative_gap": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Relative Gap"
+          },
+          "solver_runtime_seconds": {
+            "type": "number",
+            "title": "Solver Runtime Seconds"
+          },
+          "total_runtime_seconds": {
+            "type": "number",
+            "title": "Total Runtime Seconds"
+          },
+          "validation_errors": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Validation Errors"
+          },
+          "diagnostics": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Diagnostics"
+          },
+          "metrics": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/KPI"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "title": "Created At"
+          },
+          "finished_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Finished At"
+          },
+          "placements": {
+            "items": {
+              "$ref": "#/components/schemas/Placement"
+            },
+            "type": "array",
+            "title": "Placements"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "scenario_id",
+          "method",
+          "input_hash",
+          "model_version",
+          "execution_state",
+          "solver_config",
+          "solver_status",
+          "result_source",
+          "proven_optimal",
+          "has_valid_schedule",
+          "objective",
+          "best_bound",
+          "relative_gap",
+          "solver_runtime_seconds",
+          "total_runtime_seconds",
+          "validation_errors",
+          "diagnostics",
+          "metrics",
+          "created_at",
+          "finished_at",
+          "placements"
+        ],
+        "title": "RunRead"
+      },
+      "RunRequest": {
+        "properties": {
+          "methods": {
+            "items": {
+              "type": "string",
+              "enum": [
+                "fcfs",
+                "edd",
+                "milp"
+              ]
+            },
+            "type": "array",
+            "maxItems": 3,
+            "minItems": 1,
+            "title": "Methods"
+          },
+          "time_limit_seconds": {
+            "type": "integer",
+            "maximum": 120.0,
+            "minimum": 1.0,
+            "title": "Time Limit Seconds",
+            "default": 60
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "RunRequest"
+      },
+      "ScenarioRead": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "dataset_id": {
+            "type": "string",
+            "title": "Dataset Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "kind": {
+            "type": "string",
+            "title": "Kind"
+          },
+          "parent_scenario_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parent Scenario Id"
+          },
+          "machine_count": {
+            "type": "integer",
+            "title": "Machine Count"
+          },
+          "machines": {
+            "items": {
+              "$ref": "#/components/schemas/MachineRead"
+            },
+            "type": "array",
+            "title": "Machines"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "dataset_id",
+          "name",
+          "kind",
+          "parent_scenario_id",
+          "machine_count",
+          "machines"
+        ],
+        "title": "ScenarioRead"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "ValidationErrorRead": {
+        "properties": {
+          "row": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Row"
+          },
+          "field": {
+            "type": "string",
+            "title": "Field"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          }
+        },
+        "type": "object",
+        "required": [
+          "row",
+          "field",
+          "message"
+        ],
+        "title": "ValidationErrorRead"
+      }
+    }
+  }
+}

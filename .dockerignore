@@ -1,0 +1,15 @@
+.git
+**/node_modules
+**/.venv
+**/__pycache__
+**/test-results
+**/playwright-report
+frontend/dist
+runtime
+artifacts
+build
+.env
+.env.*
+!.env.example
+experiments/results
+.opspilot-cbc-*

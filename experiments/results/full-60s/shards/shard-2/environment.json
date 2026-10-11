@@ -1,0 +1,23 @@
+{
+  "started_at": "2026-10-11T14:51:44.657548+00:00",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "processor": "Intel64 Family 6 Model 151 Stepping 5, GenuineIntel",
+  "python": "3.13.15",
+  "solver_path": "project-local CBC standalone",
+  "cbc_banner": "Welcome to the CBC MILP Solver \nVersion: 2.10.13 \nBuild Date: Mar 12 2026 \n\ncommand line - C:\\Users\\12418\\Documents\\ChatGPT\\Independent Projects\\runtime\\solvers\\bin\\cbc.exe -stop (default strategy 1)\nTotal time (CPU seconds):       0.00   (Wallclock seconds):       0.00\n\n",
+  "packages": {
+    "pulp": "4.0.0",
+    "numpy": "2.5.4",
+    "pandas": "2.3.3",
+    "psutil": "7.2.2"
+  },
+  "time_limit_seconds": 60,
+  "solver_threads": 1,
+  "solver_seed": 42,
+  "generator_version": "1.0",
+  "model_version": "1.0",
+  "solver_adapter_version": "1.1",
+  "shard_index": 2,
+  "shard_count": 3,
+  "note": "Sequential CBC runs on a local development machine. Other development work may affect runtime; timings are descriptive, not controlled performance claims."
+}

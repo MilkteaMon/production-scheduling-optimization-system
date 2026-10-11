@@ -1,0 +1,16 @@
+services:
+  opspilot:
+    build: .
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - opspilot-data:/app/runtime
+    environment:
+      AI_ENABLED: ${AI_ENABLED:-false}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_MODEL: ${OPENAI_MODEL:-}
+      OPENAI_AGENTS_DISABLE_TRACING: ${OPENAI_AGENTS_DISABLE_TRACING:-true}
+    init: true
+    stop_grace_period: 10s
+volumes:
+  opspilot-data:

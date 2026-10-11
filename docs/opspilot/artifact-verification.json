@@ -1,0 +1,8 @@
+{
+  "benchmark_records_read_back": 285,
+  "demonstration_records_read_back": 6,
+  "all_hashes_and_recomputed_kpis_match": true,
+  "all_schedules_valid": true,
+  "all_displayed_times_integral": true,
+  "optimality_provenance_consistent": true
+}

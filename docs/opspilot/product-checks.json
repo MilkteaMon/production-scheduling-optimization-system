@@ -1,0 +1,52 @@
+{
+  "checked_at_utc": "2026-10-11T20:26:59.741164+00:00",
+  "scope": [
+    "workload library",
+    "Power BI ZIP exports",
+    "metric help and computed comparisons",
+    "manual GitHub source handoff"
+  ],
+  "backend": {
+    "passed": 52,
+    "evidence": "checks/product-backend.xml"
+  },
+  "frontend_unit": {
+    "passed": 8,
+    "evidence": "checks/product-frontend-unit.json"
+  },
+  "browser": {
+    "startTime": "2026-10-11T20:25:39.352Z",
+    "duration": 59435.21200000001,
+    "expected": 14,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0,
+    "evidence": "checks/product-browser.json",
+    "viewports": [
+      "desktop",
+      "Pixel 7"
+    ],
+    "isolated_database": true,
+    "real_cbc": true,
+    "paid_ai": false
+  },
+  "ruff": "passed",
+  "eslint": "passed",
+  "production_build": "passed",
+  "generated_openapi_types": "updated",
+  "migration": {
+    "revision": "0002",
+    "existing_data_counts_and_job_hashes_unchanged": true,
+    "backup_created": true
+  },
+  "source_handoff": {
+    "git_operations": false,
+    "repository_publication": false
+  },
+  "unverified": [
+    "native Power BI Desktop execution",
+    "Docker/Linux execution",
+    "GitHub Actions execution",
+    "paid live AI"
+  ]
+}

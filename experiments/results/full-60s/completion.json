@@ -1,0 +1,9 @@
+{
+  "completed_at": "2026-10-11T15:10:12.205568+00:00",
+  "datasets": 90,
+  "additional_machine_scenarios": 5,
+  "method_results": 285,
+  "all_validated": true,
+  "solver_adapter_version": "1.1",
+  "benchmark_workers": 3
+}
