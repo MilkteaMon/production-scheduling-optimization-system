@@ -21,7 +21,7 @@ test("planner workflow without an API key", async ({ page }, info) => {
   await expect(
     page.getByRole("heading", { name: "One workload. Three scheduling methods." }),
   ).toBeVisible();
-  await expect(page.getByText(/CBC [0-9.]+:/)).toBeVisible();
+  await expect(page.getByText(/^CBC (?:[0-9.]+|version unavailable): Optimal; raw objective=/),).toBeVisible();
   await page.getByRole("button", { name: "Scenarios", exact: true }).click();
   await page.getByRole("button", { name: "Simulate additional machine", exact: true }).click();
   await expect(page.getByRole("heading", { name: "4 machines", exact: true })).toBeVisible();
