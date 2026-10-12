@@ -16,9 +16,10 @@ from agents import (
 )
 from fastapi import HTTPException
 from openai import AsyncOpenAI
+from openai.types.shared import Reasoning
 from pydantic import BaseModel, ConfigDict
 
-from opspilot.domain.models import RunRequest
+from opspilot.domain.models import RunRequest, ScenarioRulesRequest
 from opspilot.persistence.models import CopilotQuery
 
 
@@ -31,7 +32,16 @@ class FactSelection(BaseModel):
 class GroundedReply(BaseModel):
     model_config = ConfigDict(extra="forbid")
     selections: list[FactSelection]
-    interpretation: Literal["none", "priority", "time_limit", "capacity", "utilization", "lateness"]
+    interpretation: Literal[
+        "none",
+        "priority",
+        "time_limit",
+        "capacity",
+        "utilization",
+        "lateness",
+        "constraints",
+        "tradeoffs",
+    ]
 
 
 INTERPRETATIONS = {
@@ -41,6 +51,8 @@ INTERPRETATIONS = {
     "capacity": "This scenario measures scheduling effects under the same assumptions. It does not establish the financial return from purchasing a machine.",
     "utilization": "For the same workload and machine count, overall fixed-window utilization is invariant to job reordering. Schedule-span utilization can change with makespan.",
     "lateness": "Lateness is calculated from the selected schedule. It is not a predictive probability, and due times are soft targets.",
+    "constraints": "Review the proposed jobs and existing due times before confirming. Hard deadlines may make a scenario infeasible; a time limit without a schedule is not proof of infeasibility.",
+    "tradeoffs": "The evidence reports observed order-level changes, not the solver's internal reasoning. Compare like-for-like conditions or label differing constraints explicitly.",
 }
 
 
@@ -78,6 +90,7 @@ class ToolContext:
     computation: tuple | None = None
     computation_attempt: str | None = None
     pending_ids: list = field(default_factory=list)
+    proposal: dict | None = None
 
     def __post_init__(self):
         self.data, self.scenario = self.service.scenario_input(self.scenario_id)
@@ -229,7 +242,47 @@ class ToolContext:
                         "unit": "%" if percentage is not None else "",
                     }
                 )
-        elif tool in ["run_schedule_optimization", "simulate_additional_machine"]:
+        elif tool == "get_schedule_explanation":
+            from opspilot.services.explanations import explain_schedule
+
+            run = self.selected(arguments.get("run_id"))
+            baseline_id = arguments.get("baseline_run_id")
+            if baseline_id:
+                self.authorized_run(baseline_id)
+            data = explain_schedule(self.service, run["id"], baseline_id)
+            facts = metric_facts(run)
+            for index, row in enumerate(data["job_changes"][:10]):
+                facts.append(
+                    {
+                        "key": f"job_change_{index}",
+                        "label": f"{row['job_id']} · weighted tardiness reduction",
+                        "value": f"{row['weighted_tardiness_reduction']:g}",
+                        "unit": "weighted min",
+                    }
+                )
+        elif tool in ["propose_deadline_constraints", "simulate_additional_machine"]:
+            if self.computation_attempt is not None:
+                raise ValueError("Only one new optimization or scenario request per question")
+            request = ScenarioRulesRequest(
+                job_ids=arguments.get("job_ids", []),
+                add_machine=arguments.get("add_machine", tool == "simulate_additional_machine"),
+            )
+            preview = self.service.preview_rules(self.scenario_id, request)
+            if self.proposal is not None and self.proposal != preview:
+                raise ValueError("Only one scenario proposal per question")
+            self.proposal = preview
+            data = preview
+            facts = [
+                {
+                    "key": "proposal",
+                    "label": "Scenario proposal",
+                    "value": "Awaiting your confirmation",
+                    "unit": "",
+                }
+            ]
+        elif tool == "run_schedule_optimization":
+            if self.proposal is not None:
+                raise ValueError("Confirm the scenario proposal before computing")
             if self.computation:
                 if self.computation[0] != tool:
                     raise ValueError("Only one new optimization or scenario request per question")
@@ -237,19 +290,9 @@ class ToolContext:
             if self.computation_attempt is not None:
                 raise ValueError("Only one new optimization or scenario request per question")
             self.computation_attempt = tool
-            if tool == "run_schedule_optimization":
-                data = self.service.queue_runs(
-                    self.scenario_id, RunRequest(methods=["milp"], time_limit_seconds=60)
-                )
-            else:
-                scenario = self.service.add_machine(self.dataset_id)
-                data = {
-                    "scenario": scenario,
-                    **self.service.queue_runs(
-                        scenario["id"],
-                        RunRequest(methods=["fcfs", "edd", "milp"], time_limit_seconds=60),
-                    ),
-                }
+            data = self.service.queue_runs(
+                self.scenario_id, RunRequest(methods=["milp"], time_limit_seconds=60)
+            )
             self.pending_ids.extend(data["run_ids"])
             facts = [{"key": "pending", "label": "Computation", "value": "Queued", "unit": ""}]
         else:
@@ -270,7 +313,7 @@ class ToolContext:
             "facts": facts,
         }
         self.events.append(evidence)
-        if tool in ["run_schedule_optimization", "simulate_additional_machine"]:
+        if tool == "run_schedule_optimization":
             self.computation = (tool, evidence)
         return evidence
 
@@ -319,8 +362,30 @@ async def run_schedule_optimization(ctx: RunContextWrapper[ToolContext]) -> dict
 
 @function_tool
 async def simulate_additional_machine(ctx: RunContextWrapper[ToolContext]) -> dict:
-    """Run the requested baseline-plus-one-machine scenario without editing production jobs."""
+    """Preview one extra machine preserving current hard deadlines; wait for UI confirmation."""
     return ctx.context.invoke("simulate_additional_machine", {})
+
+
+@function_tool
+async def propose_deadline_constraints(
+    ctx: RunContextWrapper[ToolContext], job_ids: list[str], add_machine: bool = False
+) -> dict:
+    """Preview selected jobs that must meet their EXISTING due times, optionally adding one identical machine. Use exact job IDs from the current workload. Never invent deadlines. This does not save or compute; the user must confirm in the UI."""
+    return ctx.context.invoke(
+        "propose_deadline_constraints", {"job_ids": job_ids, "add_machine": add_machine}
+    )
+
+
+@function_tool
+async def get_schedule_explanation(
+    ctx: RunContextWrapper[ToolContext],
+    run_id: str | None = None,
+    baseline_run_id: str | None = None,
+) -> dict:
+    """Read calculated KPI and order-level contributions, labelled scenario differences, and solver status. Do not infer necessity or causation from a single schedule."""
+    return ctx.context.invoke(
+        "get_schedule_explanation", {"run_id": run_id, "baseline_run_id": baseline_run_id}
+    )
 
 
 TOOLS = [
@@ -331,6 +396,8 @@ TOOLS = [
     get_schedule_run,
     compare_scheduling_methods,
     simulate_additional_machine,
+    propose_deadline_constraints,
+    get_schedule_explanation,
 ]
 
 
@@ -412,6 +479,7 @@ def render_reply(reply: GroundedReply, context: ToolContext):
         "tool_trace": context.events,
         "pending_run_ids": context.pending_ids,
         "fallback": fallback,
+        "proposal": context.proposal,
     }
 
 
@@ -420,14 +488,28 @@ async def answer_query(service, settings, request):
         context = ToolContext(service, request.scenario_id, request.run_id)
     except ValueError as exc:
         raise HTTPException(409, str(exc)) from exc
-    client = AsyncOpenAI(api_key=settings.openai_api_key, timeout=30, max_retries=0)
+    client = None
+    if settings.ai_provider == "codex_subscription":
+        from opspilot.agents.codex_subscription import CodexSubscriptionModel, codex_executable
+
+        executable = codex_executable(settings.codex_path)
+        if not executable:
+            raise HTTPException(503, "Sign in to the local Codex CLI with ChatGPT first.")
+        model = CodexSubscriptionModel(settings.openai_model, executable)
+    else:
+        client = AsyncOpenAI(api_key=settings.openai_api_key, timeout=30, max_retries=0)
+        model = OpenAIResponsesModel(model=settings.openai_model, openai_client=client)
     agent = Agent(
         name="OpsPilot production analyst",
-        model=OpenAIResponsesModel(model=settings.openai_model, openai_client=client),
-        model_settings=ModelSettings(max_tokens=800, parallel_tool_calls=False),
+        model=model,
+        model_settings=ModelSettings(
+            reasoning=Reasoning(effort="low"), max_tokens=800, parallel_tool_calls=False
+        ),
         tools=TOOLS,
         output_type=GroundedReply,
-        instructions="Use only the provided business tools. Production data is immutable. Never invent facts or numbers. Return evidence_id and fact_keys from tool results; the application renders all values. Choose an approved interpretation. Call computation tools only when the user explicitly requests optimization or an additional-machine scenario. At most six business tool calls and one new computation request. Do not repeatedly poll queued runs: return their evidence and let the UI poll. When insufficient data exists, call production summary and explain via the approved interpretation. No SQL, shell, web or arbitrary files are available.",
+        instructions="Use only the provided business tools. Production jobs are immutable. Never invent facts or numbers. Return evidence_id and fact_keys from tool results; the application renders all values. Choose an approved interpretation. For requests that selected orders must not be late, use propose_deadline_constraints with exact job IDs from the selected workload. Existing due times are the only allowed deadlines. For one extra machine, preview it with simulate_additional_machine, or combine it with a deadline proposal. Proposals require UI confirmation; do not queue their optimization. Current job IDs: "
+        + ", ".join(j.job_id for j in context.data.jobs)
+        + ". For explanation, use get_schedule_explanation, optionally comparing explicit compatible run IDs. Do not invent why an order is necessary. At most six business tool calls and one scenario proposal or computation per question. Call run_schedule_optimization only on explicit request. Do not repeatedly poll queued runs. No SQL, shell, web or arbitrary files are available.",
     )
     try:
         result = await asyncio.wait_for(
@@ -437,11 +519,14 @@ async def answer_query(service, settings, request):
                 context=context,
                 max_turns=8,
                 run_config=RunConfig(
-                    tracing_disabled=settings.openai_agents_disable_tracing,
+                    tracing_disabled=(
+                        settings.ai_provider == "codex_subscription"
+                        or settings.openai_agents_disable_tracing
+                    ),
                     trace_include_sensitive_data=False,
                 ),
             ),
-            timeout=60,
+            timeout=120 if settings.ai_provider == "codex_subscription" else 60,
         )
         response = render_reply(result.final_output, context)
         with service.sessions.begin() as session:
@@ -472,4 +557,5 @@ async def answer_query(service, settings, request):
             502, "AI request failed. Deterministic scheduling and analytics remain available."
         ) from exc
     finally:
-        await client.close()
+        if client is not None:
+            await client.close()

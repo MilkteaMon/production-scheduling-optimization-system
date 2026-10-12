@@ -28,6 +28,8 @@ export default defineConfig({
         env: {
           DATABASE_URL: `sqlite:///${resolve(testFolder, `browser-${process.pid}.db`).replaceAll("\\", "/")}`,
           AI_ENABLED: "false",
+          AI_PROVIDER: "openai_api",
+          OPENAI_API_KEY: "",
         },
       },
   use: {

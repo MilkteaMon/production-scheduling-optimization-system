@@ -26,7 +26,7 @@ export default function DialogFrame({
     function focusable() {
       return Array.from(
         root.current?.querySelectorAll<HTMLElement>(
-          'button:not(:disabled),a[href],input:not(:disabled),select:not(:disabled),summary,[tabindex="0"]',
+          'button:not(:disabled),a[href],input:not(:disabled),textarea:not(:disabled),select:not(:disabled),summary,[tabindex="0"]',
         ) ?? [],
       ).filter((element) => element.getClientRects().length > 0);
     }

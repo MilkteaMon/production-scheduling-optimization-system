@@ -134,6 +134,11 @@ test("mocked copilot renders local evidence and deterministic completion cards",
     });
   });
   await page.goto("/");
+  await page.getByRole("button", { name: "Load data", exact: true }).click();
+  await page.getByLabel("Dataset name").fill("Copilot evidence fixture");
+  await page.getByLabel("Jobs", { exact: true }).fill("3");
+  await page.getByLabel("Machines", { exact: true }).fill("1");
+  await page.getByRole("button", { name: "Confirm and generate" }).click();
   await expect(page.getByTestId("gantt")).toBeVisible();
   await page.getByRole("button", { name: "AI copilot", exact: false }).click();
   await page.getByRole("button", { name: "Which orders are late?", exact: true }).click();

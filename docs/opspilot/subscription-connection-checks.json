@@ -1,0 +1,63 @@
+{
+  "verified_at_utc": "2026-10-12T18:39:29.612162+00:00",
+  "verified_at_singapore": "2026-10-13T02:39:29.612162+08:00",
+  "authentication": "Official Codex CLI reports Logged in using ChatGPT. No auth file was read or copied.",
+  "provider": "codex_subscription",
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "low",
+  "live_checks": {
+    "connectivity": "CONNECTED",
+    "grounded_summary": {
+      "passed": true,
+      "facts": [
+        {
+          "label": "Production jobs",
+          "value": "30",
+          "unit": "jobs"
+        },
+        {
+          "label": "Scenario machines",
+          "value": "4",
+          "unit": "machines"
+        }
+      ],
+      "duration_seconds": 15.3
+    },
+    "combined_deadline_and_machine_preview": {
+      "passed": true,
+      "job_ids": [
+        "JOB-001"
+      ],
+      "machine_count": 5,
+      "duration_seconds": 14.16,
+      "new_scenarios_and_runs_created": false
+    },
+    "connected_page_render": "passed without an additional model request"
+  },
+  "offline_checks": {
+    "backend_full_suite_passed": 74,
+    "subscription_tests_after_final_origin_guard_passed": 13,
+    "frontend_unit_passed": 8,
+    "desktop_mobile_copilot_browser_passed": 4,
+    "ruff": "passed",
+    "eslint": "passed",
+    "typescript_build": "passed"
+  },
+  "paid_platform_api_calls_executed": false,
+  "broad_model_quality_evaluation": false,
+  "service": {
+    "url": "http://127.0.0.1:8000",
+    "running": true,
+    "public_exposure": false
+  },
+  "account_credentials_in_repository": false,
+  "git_commit_or_push_performed": false,
+  "source_sha256": {
+    "backend/src/opspilot/agents/codex_subscription.py": "b09843cf90d3e5e5d57c4e6df957f2e2cca827205b4f40b2606eb328c3047e9f",
+    "backend/src/opspilot/agents/copilot.py": "b21693953910d8b28ad403c28f4a63a3cfb77ae54e9187ff692fb38e5cffd713",
+    "backend/src/opspilot/api/main.py": "d44b1cbc292792d515bd5f71478f9b30e5709d7d37f5af64d5cd23071f9faf2a",
+    "backend/src/opspilot/config.py": "42b62a60a3fe9bb42ffa2d90c69cf5cd0a7826d5fcb3f2f2c45e31fedb235192",
+    "frontend/src/App.tsx": "f6f46d623b84119e60eda82a534ecf97f062a50fb95e2678ac676e97c8bbf12f",
+    "backend/tests/test_codex_subscription.py": "d4a10b82afd2b4c52bd8653c9c9b456d6d88ab88d5e574888867115910a709ba"
+  }
+}

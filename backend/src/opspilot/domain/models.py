@@ -28,11 +28,17 @@ class PlanningInput(StrictModel):
     jobs: list[Job] = Field(min_length=1, max_length=50)
     machine_count: StrictInt = Field(ge=1, le=6)
     horizon_min: StrictInt | None = None
+    must_finish_job_ids: list[str] = Field(default_factory=list, max_length=50)
 
     @model_validator(mode="after")
     def consistent(self):
         if len({j.job_id for j in self.jobs}) != len(self.jobs):
             raise ValueError("Job IDs must be unique")
+        if len(set(self.must_finish_job_ids)) != len(self.must_finish_job_ids):
+            raise ValueError("Duplicate hard-deadline job IDs")
+        if set(self.must_finish_job_ids) - {j.job_id for j in self.jobs}:
+            raise ValueError("Hard-deadline jobs must belong to this dataset")
+        self.must_finish_job_ids = sorted(self.must_finish_job_ids)
         safe = max(j.release_time_min for j in self.jobs) + sum(
             j.processing_time_min for j in self.jobs
         )
@@ -51,9 +57,10 @@ class PlanningInput(StrictModel):
 
     @property
     def input_hash(self) -> str:
-        return sha256(
-            f"{self.job_hash}:{self.machine_count}:{self.horizon_min}".encode()
-        ).hexdigest()
+        value = f"{self.job_hash}:{self.machine_count}:{self.horizon_min}"
+        if self.must_finish_job_ids:
+            value += ":hard-deadlines:" + ",".join(self.must_finish_job_ids)
+        return sha256(value.encode()).hexdigest()
 
 
 class Placement(StrictModel):
@@ -78,7 +85,7 @@ class ScheduleResult(StrictModel):
     method: Method
     placements: list[Placement]
     solver_status: SolverTermination = "not_run"
-    result_source: ScheduleSource = "heuristic"
+    result_source: ScheduleSource | None = "heuristic"
     proven_optimal: bool = False
     best_bound: float | None = None
     relative_gap: float | None = None
@@ -127,3 +134,16 @@ class CopilotRequest(StrictModel):
     scenario_id: str
     run_id: str | None = None
     question: str = Field(min_length=1, max_length=2000)
+
+
+class ScenarioRulesRequest(StrictModel):
+    job_ids: list[str] = Field(default_factory=list, max_length=50)
+    add_machine: bool = False
+    confirmed: bool = False
+    time_limit_seconds: StrictInt = Field(default=60, ge=1, le=120)
+
+    @model_validator(mode="after")
+    def distinct_jobs(self):
+        if len(set(self.job_ids)) != len(self.job_ids):
+            raise ValueError("Select distinct job IDs")
+        return self

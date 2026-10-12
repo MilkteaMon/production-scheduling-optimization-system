@@ -42,6 +42,8 @@ def test_tools_allowlist_and_scope():
         "get_schedule_run",
         "compare_scheduling_methods",
         "simulate_additional_machine",
+        "propose_deadline_constraints",
+        "get_schedule_explanation",
     }
     context = ToolContext(FakeService(), "base", "selected")
     with pytest.raises(ValueError, match="outside"):
@@ -135,6 +137,7 @@ def test_mocked_agent_response_is_persisted_without_remote_calls(tmp_path, monke
 
     async def fake_runner(agent, question, *, context, max_turns, run_config):
         assert agent.model.model == "explicit-test-model"
+        assert agent.model_settings.to_json_dict()["reasoning"]["effort"] == "low"
         assert run_config.tracing_disabled and max_turns == 8
         event = context.invoke("get_production_summary", {})
         return SimpleNamespace(
@@ -149,6 +152,8 @@ def test_mocked_agent_response_is_persisted_without_remote_calls(tmp_path, monke
     monkeypatch.setattr("opspilot.agents.copilot.Runner.run", fake_runner)
     app = create_app(
         Settings(
+            _env_file=None,
+            ai_provider="openai_api",
             database_url=f"sqlite:///{(tmp_path / 'agent.db').as_posix()}",
             ai_enabled=True,
             openai_api_key="mock-not-a-real-key",

@@ -1,6 +1,7 @@
 from contextlib import asynccontextmanager
+from urllib.parse import urlparse
 
-from fastapi import FastAPI, File, Form, HTTPException, UploadFile
+from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse, Response
 from fastapi.staticfiles import StaticFiles
 
@@ -10,11 +11,15 @@ from opspilot.api.schemas import (
     CopilotRead,
     DatasetRead,
     DatasetVisibilityRequest,
+    ExplanationRead,
     HealthRead,
     PreviewRead,
     QueuedRead,
+    RulesAppliedRead,
+    RulesPreviewRead,
     RunRead,
     ScenarioRead,
+    WorkloadPreviewRead,
 )
 from opspilot.branding import FILE_PREFIX, PRODUCT_DESCRIPTION, PRODUCT_NAME
 from opspilot.config import Settings
@@ -26,11 +31,40 @@ from opspilot.domain.models import (
     Job,
     PlanningInput,
     RunRequest,
+    ScenarioRulesRequest,
+)
+from opspilot.domain.workload_drafts import (
+    WorkloadConfirmRequest,
+    WorkloadDescriptionRequest,
+    WorkloadReviewRequest,
 )
 from opspilot.persistence.database import create_database
 from opspilot.scheduling.milp import solver_available
 from opspilot.services.application import ApplicationService
 from opspilot.services.data import GENERATOR_VERSION, MAX_CSV_BYTES, generate_data, validate_csv
+
+
+def require_local_subscription(settings, request):
+    if not settings.ai_enabled or settings.ai_provider != "codex_subscription":
+        return
+    local_hosts = {"127.0.0.1", "::1", "localhost"}
+    client_host = request.client.host if request.client else None
+    if client_host not in local_hosts or request.url.hostname not in local_hosts:
+        raise HTTPException(403, "Subscription AI is available only on this computer.")
+    origin = request.headers.get("origin")
+    if origin:
+        try:
+            parsed = urlparse(origin)
+            default_port = 443 if request.url.scheme == "https" else 80
+            valid = (
+                parsed.scheme == request.url.scheme
+                and parsed.hostname in local_hosts
+                and (parsed.port or default_port) == (request.url.port or default_port)
+            )
+        except ValueError:
+            valid = False
+        if not valid:
+            raise HTTPException(403, "Use the local application to request AI.")
 
 
 def create_app(settings: Settings | None = None):
@@ -61,6 +95,9 @@ def create_app(settings: Settings | None = None):
             "solver_available": solver_available(),
             "ai_available": settings.ai_available,
             "ai_enabled": settings.ai_enabled,
+            "ai_provider": settings.ai_provider if settings.ai_enabled else None,
+            "ai_model": settings.openai_model if settings.ai_enabled else None,
+            "ai_reasoning_effort": "low" if settings.ai_enabled else None,
             "version": "0.1.0",
         }
 
@@ -87,6 +124,40 @@ def create_app(settings: Settings | None = None):
         return app.state.service.create_dataset(
             generate_data(request), request.name, "synthetic", params
         )
+
+    @app.post(prefix + "/natural-language/parse", response_model=WorkloadPreviewRead)
+    async def describe_workload(request: WorkloadDescriptionRequest, http_request: Request):
+        from opspilot.agents.workload_parser import parse_workload
+        from opspilot.services.workload_drafts import review_workload
+
+        require_local_subscription(settings, http_request)
+        if not settings.ai_available:
+            raise HTTPException(
+                503,
+                "Connect AI to parse a description. CSV and manual generation remain available.",
+            )
+        try:
+            draft = await parse_workload(settings, request.description)
+            return review_workload(request.description, draft)
+        except Exception as exc:
+            raise HTTPException(
+                502,
+                "The description could not be parsed. Your existing data is unchanged; edit the description or retry.",
+            ) from exc
+
+    @app.post(prefix + "/natural-language/review", response_model=WorkloadPreviewRead)
+    def review_description(request: WorkloadReviewRequest, http_request: Request):
+        from opspilot.services.workload_drafts import review_workload
+
+        require_local_subscription(settings, http_request)
+        return review_workload(request.description, request.draft)
+
+    @app.post(prefix + "/natural-language/confirm", status_code=201, response_model=DatasetRead)
+    def confirm_description(request: WorkloadConfirmRequest, http_request: Request):
+        from opspilot.services.workload_drafts import confirm_workload
+
+        require_local_subscription(settings, http_request)
+        return confirm_workload(app.state.service, settings, request)
 
     async def preview(file, machine_count):
         content = await file.read(MAX_CSV_BYTES + 1)
@@ -133,6 +204,22 @@ def create_app(settings: Settings | None = None):
     def run(run_id: str):
         return app.state.service.get_run(run_id)
 
+    @app.post(prefix + "/scenarios/{scenario_id}/rules/preview", response_model=RulesPreviewRead)
+    def preview_rules(scenario_id: str, request: ScenarioRulesRequest):
+        return app.state.service.preview_rules(scenario_id, request)
+
+    @app.post(
+        prefix + "/scenarios/{scenario_id}/rules", status_code=202, response_model=RulesAppliedRead
+    )
+    def apply_rules(scenario_id: str, request: ScenarioRulesRequest):
+        return app.state.service.apply_rules(scenario_id, request)
+
+    @app.get(prefix + "/runs/{run_id}/explanation", response_model=ExplanationRead)
+    def explanation(run_id: str, baseline_run_id: str | None = None):
+        from opspilot.services.explanations import explain_schedule
+
+        return explain_schedule(app.state.service, run_id, baseline_run_id)
+
     @app.get(prefix + "/runs/{run_id}/late-jobs", response_model=AnalyticsRead)
     def late(run_id: str):
         return app.state.service.analytics(run_id, "late")
@@ -168,9 +255,10 @@ def create_app(settings: Settings | None = None):
         )
 
     @app.post(prefix + "/copilot/query", response_model=CopilotRead)
-    async def copilot(request: CopilotRequest):
+    async def copilot(request: CopilotRequest, http_request: Request):
         from opspilot.agents.copilot import answer_query
 
+        require_local_subscription(settings, http_request)
         if not settings.ai_available:
             raise HTTPException(
                 503, "AI is disabled. Scheduling, scenarios and exports remain available."

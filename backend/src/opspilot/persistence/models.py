@@ -58,6 +58,7 @@ class Scenario(Base):
     parent_scenario_id: Mapped[str | None] = mapped_column(ForeignKey("scenarios.id"))
     name: Mapped[str] = mapped_column(String)
     kind: Mapped[str] = mapped_column(String)
+    must_finish_job_ids: Mapped[list] = mapped_column(JSON, default=list)
     created_at: Mapped[str] = mapped_column(String, default=now)
 
 

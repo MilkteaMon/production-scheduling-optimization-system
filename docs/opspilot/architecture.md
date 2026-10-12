@@ -14,7 +14,7 @@ flowchart LR
   Process --> CBC[PuLP 4 / COIN_CMD / CBC]
   Process --> Core
   API --> Agent[One optional OpenAI agent]
-  Agent --> Tools[Seven validated business tools]
+  Agent --> Tools[Nine validated business tools]
   Tools --> Services
 ```
 
@@ -25,7 +25,8 @@ loop. At most ten runs wait behind one active run. Saturated requests return 429
 reserves capacity before committing its immutable dataset. Solving never holds a database
 transaction open. CBC runs in a separate Python process with controlled stdin arguments, an
 elapsed-time budget, and a budget-plus-30-second parent watchdog. The watchdog kills the process
-tree and retains a labelled heuristic fallback. A crashed worker produces an explicit failed run;
+tree and retains a labelled heuristic fallback only when it satisfies all hard deadlines.
+Without a feasible fallback it reports no validated result. A crashed worker produces an explicit failed run;
 previous baselines remain usable. Graceful shutdown kills owned processes and marks unfinished
 work interrupted. Startup marks abandoned queued/running records interrupted and preserves
 completed results. Unfinished work is not automatically resumed.
@@ -51,6 +52,11 @@ The authoritative request and response contract is FastAPI OpenAPI, saved at
 `backend/openapi.json`. `scripts/opspilot_openapi.py` refreshes it and `npm run generate:api`
 generates TypeScript types consumed by the frontend. Validation, missing records, incompatible
 contexts, and busy queues use 422, 404, 409, and 429 respectively.
+
+Routes also provide read-only rule preview, confirmed immutable What-if creation, and per-run
+explanations with optional explicit compatible baseline IDs. Rules change the input hash;
+the same job hash and horizon are retained. Derived scenarios deduplicate by their full input hash.
+Model version 2.0 records selected hard deadlines; legacy records remain unchanged.
 
 Routes provide health, dataset list/detail/generation/CSV preview/import, scenario list/creation,
 scenario runs, run detail, late jobs, machine utilization, explicit comparisons, four allowlisted

@@ -172,6 +172,120 @@
         }
       }
     },
+    "/api/v1/natural-language/parse": {
+      "post": {
+        "summary": "Describe Workload",
+        "operationId": "describe_workload_api_v1_natural_language_parse_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WorkloadDescriptionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkloadPreviewRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/natural-language/review": {
+      "post": {
+        "summary": "Review Description",
+        "operationId": "review_description_api_v1_natural_language_review_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WorkloadReviewRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkloadPreviewRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/natural-language/confirm": {
+      "post": {
+        "summary": "Confirm Description",
+        "operationId": "confirm_description_api_v1_natural_language_confirm_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WorkloadConfirmRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DatasetRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/datasets/validate-csv": {
       "post": {
         "summary": "Validate",
@@ -440,6 +554,159 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/RunRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/scenarios/{scenario_id}/rules/preview": {
+      "post": {
+        "summary": "Preview Rules",
+        "operationId": "preview_rules_api_v1_scenarios__scenario_id__rules_preview_post",
+        "parameters": [
+          {
+            "name": "scenario_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Scenario Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScenarioRulesRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RulesPreviewRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/scenarios/{scenario_id}/rules": {
+      "post": {
+        "summary": "Apply Rules",
+        "operationId": "apply_rules_api_v1_scenarios__scenario_id__rules_post",
+        "parameters": [
+          {
+            "name": "scenario_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Scenario Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScenarioRulesRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RulesAppliedRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/runs/{run_id}/explanation": {
+      "get": {
+        "summary": "Explanation",
+        "operationId": "explanation_api_v1_runs__run_id__explanation_get",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          },
+          {
+            "name": "baseline_run_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Baseline Run Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExplanationRead"
                 }
               }
             }
@@ -1001,6 +1268,14 @@
             "type": "array",
             "title": "Placements"
           },
+          "must_finish_job_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Must Finish Job Ids",
+            "default": []
+          },
           "machine_count": {
             "type": "integer",
             "title": "Machine Count"
@@ -1008,6 +1283,11 @@
           "scenario_name": {
             "type": "string",
             "title": "Scenario Name"
+          },
+          "constraints_differ": {
+            "type": "boolean",
+            "title": "Constraints Differ",
+            "default": false
           },
           "changes": {
             "additionalProperties": {
@@ -1129,6 +1409,16 @@
           "fallback": {
             "type": "boolean",
             "title": "Fallback"
+          },
+          "proposal": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RulesPreviewRead"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         "type": "object",
@@ -1277,6 +1567,117 @@
         ],
         "title": "DatasetVisibilityRequest"
       },
+      "DeadlineRead": {
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "title": "Job Id"
+          },
+          "due_time_min": {
+            "type": "integer",
+            "title": "Due Time Min"
+          },
+          "earliest_completion_min": {
+            "type": "integer",
+            "title": "Earliest Completion Min"
+          }
+        },
+        "type": "object",
+        "required": [
+          "job_id",
+          "due_time_min",
+          "earliest_completion_min"
+        ],
+        "title": "DeadlineRead"
+      },
+      "DraftJob": {
+        "properties": {
+          "label": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 100
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Label"
+          },
+          "job_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Job Id"
+          },
+          "processing_time_min": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Processing Time Min"
+          },
+          "release_time_min": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Release Time Min"
+          },
+          "due_time_min": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Due Time Min"
+          },
+          "priority_weight": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Priority Weight"
+          },
+          "must_finish_on_time": {
+            "type": "boolean",
+            "title": "Must Finish On Time"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "label",
+          "job_id",
+          "processing_time_min",
+          "release_time_min",
+          "due_time_min",
+          "priority_weight",
+          "must_finish_on_time"
+        ],
+        "title": "DraftJob"
+      },
       "EvidenceRead": {
         "properties": {
           "evidence_id": {
@@ -1311,6 +1712,151 @@
           "facts"
         ],
         "title": "EvidenceRead"
+      },
+      "ExplanationRead": {
+        "properties": {
+          "run_id": {
+            "type": "string",
+            "title": "Run Id"
+          },
+          "baseline_run_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Baseline Run Id"
+          },
+          "dataset_id": {
+            "type": "string",
+            "title": "Dataset Id"
+          },
+          "scenario_id": {
+            "type": "string",
+            "title": "Scenario Id"
+          },
+          "method": {
+            "type": "string",
+            "enum": [
+              "fcfs",
+              "edd",
+              "milp"
+            ],
+            "title": "Method"
+          },
+          "solver_status": {
+            "type": "string",
+            "enum": [
+              "optimal",
+              "time_limit",
+              "gap_limit",
+              "infeasible",
+              "unbounded",
+              "error",
+              "not_run"
+            ],
+            "title": "Solver Status"
+          },
+          "result_source": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "heuristic",
+                  "cbc_incumbent",
+                  "heuristic_fallback"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Result Source"
+          },
+          "proven_optimal": {
+            "type": "boolean",
+            "title": "Proven Optimal"
+          },
+          "has_valid_schedule": {
+            "type": "boolean",
+            "title": "Has Valid Schedule"
+          },
+          "machine_count": {
+            "type": "integer",
+            "title": "Machine Count"
+          },
+          "must_finish_job_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Must Finish Job Ids"
+          },
+          "metrics": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/KPI"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "baseline_metrics": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/KPI"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "summary": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Summary"
+          },
+          "changes": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ReductionRead"
+            },
+            "type": "object",
+            "title": "Changes"
+          },
+          "job_changes": {
+            "items": {
+              "$ref": "#/components/schemas/JobChangeRead"
+            },
+            "type": "array",
+            "title": "Job Changes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "run_id",
+          "baseline_run_id",
+          "dataset_id",
+          "scenario_id",
+          "method",
+          "solver_status",
+          "result_source",
+          "proven_optimal",
+          "has_valid_schedule",
+          "machine_count",
+          "must_finish_job_ids",
+          "metrics",
+          "baseline_metrics",
+          "summary",
+          "changes",
+          "job_changes"
+        ],
+        "title": "ExplanationRead"
       },
       "ExportBundleRequest": {
         "properties": {
@@ -1444,6 +1990,39 @@
             "type": "boolean",
             "title": "Ai Enabled"
           },
+          "ai_provider": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ai Provider"
+          },
+          "ai_model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ai Model"
+          },
+          "ai_reasoning_effort": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ai Reasoning Effort"
+          },
           "version": {
             "type": "string",
             "title": "Version"
@@ -1504,6 +2083,59 @@
           "priority_weight"
         ],
         "title": "Job"
+      },
+      "JobChangeRead": {
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "title": "Job Id"
+          },
+          "priority_weight": {
+            "type": "integer",
+            "title": "Priority Weight"
+          },
+          "due_time_min": {
+            "type": "integer",
+            "title": "Due Time Min"
+          },
+          "baseline_completion_min": {
+            "type": "number",
+            "title": "Baseline Completion Min"
+          },
+          "completion_min": {
+            "type": "number",
+            "title": "Completion Min"
+          },
+          "baseline_tardiness_min": {
+            "type": "number",
+            "title": "Baseline Tardiness Min"
+          },
+          "tardiness_min": {
+            "type": "number",
+            "title": "Tardiness Min"
+          },
+          "weighted_tardiness_reduction": {
+            "type": "number",
+            "title": "Weighted Tardiness Reduction"
+          },
+          "must_finish_on_time": {
+            "type": "boolean",
+            "title": "Must Finish On Time"
+          }
+        },
+        "type": "object",
+        "required": [
+          "job_id",
+          "priority_weight",
+          "due_time_min",
+          "baseline_completion_min",
+          "completion_min",
+          "baseline_tardiness_min",
+          "tardiness_min",
+          "weighted_tardiness_reduction",
+          "must_finish_on_time"
+        ],
+        "title": "JobChangeRead"
       },
       "KPI": {
         "properties": {
@@ -1601,6 +2233,51 @@
         ],
         "title": "Placement"
       },
+      "PlanningInput": {
+        "properties": {
+          "jobs": {
+            "items": {
+              "$ref": "#/components/schemas/Job"
+            },
+            "type": "array",
+            "maxItems": 50,
+            "minItems": 1,
+            "title": "Jobs"
+          },
+          "machine_count": {
+            "type": "integer",
+            "maximum": 6.0,
+            "minimum": 1.0,
+            "title": "Machine Count"
+          },
+          "horizon_min": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Horizon Min"
+          },
+          "must_finish_job_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 50,
+            "title": "Must Finish Job Ids"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "jobs",
+          "machine_count"
+        ],
+        "title": "PlanningInput"
+      },
       "PreviewRead": {
         "properties": {
           "valid": {
@@ -1683,6 +2360,102 @@
           "percentage_reduction"
         ],
         "title": "ReductionRead"
+      },
+      "RulesAppliedRead": {
+        "properties": {
+          "scenario": {
+            "$ref": "#/components/schemas/ScenarioRead"
+          },
+          "run_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Run Ids"
+          },
+          "preview": {
+            "$ref": "#/components/schemas/RulesPreviewRead"
+          }
+        },
+        "type": "object",
+        "required": [
+          "scenario",
+          "run_ids",
+          "preview"
+        ],
+        "title": "RulesAppliedRead"
+      },
+      "RulesPreviewRead": {
+        "properties": {
+          "scenario_id": {
+            "type": "string",
+            "title": "Scenario Id"
+          },
+          "dataset_id": {
+            "type": "string",
+            "title": "Dataset Id"
+          },
+          "job_hash": {
+            "type": "string",
+            "title": "Job Hash"
+          },
+          "horizon_min": {
+            "type": "integer",
+            "title": "Horizon Min"
+          },
+          "input_hash": {
+            "type": "string",
+            "title": "Input Hash"
+          },
+          "base_machine_count": {
+            "type": "integer",
+            "title": "Base Machine Count"
+          },
+          "machine_count": {
+            "type": "integer",
+            "title": "Machine Count"
+          },
+          "job_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Job Ids"
+          },
+          "add_machine": {
+            "type": "boolean",
+            "title": "Add Machine"
+          },
+          "deadlines": {
+            "items": {
+              "$ref": "#/components/schemas/DeadlineRead"
+            },
+            "type": "array",
+            "title": "Deadlines"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Warnings"
+          }
+        },
+        "type": "object",
+        "required": [
+          "scenario_id",
+          "dataset_id",
+          "job_hash",
+          "horizon_min",
+          "input_hash",
+          "base_machine_count",
+          "machine_count",
+          "job_ids",
+          "add_machine",
+          "deadlines",
+          "warnings"
+        ],
+        "title": "RulesPreviewRead"
       },
       "RunRead": {
         "properties": {
@@ -1850,6 +2623,14 @@
             },
             "type": "array",
             "title": "Placements"
+          },
+          "must_finish_job_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Must Finish Job Ids",
+            "default": []
           }
         },
         "type": "object",
@@ -1946,6 +2727,14 @@
             },
             "type": "array",
             "title": "Machines"
+          },
+          "must_finish_job_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Must Finish Job Ids",
+            "default": []
           }
         },
         "type": "object",
@@ -1959,6 +2748,38 @@
           "machines"
         ],
         "title": "ScenarioRead"
+      },
+      "ScenarioRulesRequest": {
+        "properties": {
+          "job_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 50,
+            "title": "Job Ids"
+          },
+          "add_machine": {
+            "type": "boolean",
+            "title": "Add Machine",
+            "default": false
+          },
+          "confirmed": {
+            "type": "boolean",
+            "title": "Confirmed",
+            "default": false
+          },
+          "time_limit_seconds": {
+            "type": "integer",
+            "maximum": 120.0,
+            "minimum": 1.0,
+            "title": "Time Limit Seconds",
+            "default": 60
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "ScenarioRulesRequest"
       },
       "ValidationError": {
         "properties": {
@@ -2029,6 +2850,212 @@
           "message"
         ],
         "title": "ValidationErrorRead"
+      },
+      "WorkloadConfirmRequest": {
+        "properties": {
+          "description": {
+            "type": "string",
+            "maxLength": 8000,
+            "minLength": 1,
+            "title": "Description"
+          },
+          "draft": {
+            "$ref": "#/components/schemas/WorkloadDraft"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "confirmation_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Confirmation Id"
+          },
+          "confirmed": {
+            "type": "boolean",
+            "title": "Confirmed",
+            "default": false
+          },
+          "time_limit_seconds": {
+            "type": "integer",
+            "maximum": 120.0,
+            "minimum": 1.0,
+            "title": "Time Limit Seconds",
+            "default": 60
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "description",
+          "draft",
+          "name",
+          "confirmation_id"
+        ],
+        "title": "WorkloadConfirmRequest"
+      },
+      "WorkloadDescriptionRequest": {
+        "properties": {
+          "description": {
+            "type": "string",
+            "maxLength": 8000,
+            "minLength": 1,
+            "title": "Description"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "description"
+        ],
+        "title": "WorkloadDescriptionRequest"
+      },
+      "WorkloadDraft": {
+        "properties": {
+          "machine_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Machine Count"
+          },
+          "time_basis": {
+            "type": "string",
+            "enum": [
+              "minutes_from_start",
+              "needs_clarification"
+            ],
+            "title": "Time Basis"
+          },
+          "jobs": {
+            "items": {
+              "$ref": "#/components/schemas/DraftJob"
+            },
+            "type": "array",
+            "maxItems": 50,
+            "title": "Jobs"
+          },
+          "clarifications": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 10,
+            "title": "Clarifications"
+          },
+          "unsupported_requirements": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 10,
+            "title": "Unsupported Requirements"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "machine_count",
+          "time_basis",
+          "jobs",
+          "clarifications",
+          "unsupported_requirements"
+        ],
+        "title": "WorkloadDraft"
+      },
+      "WorkloadPreviewRead": {
+        "properties": {
+          "draft": {
+            "$ref": "#/components/schemas/WorkloadDraft"
+          },
+          "ready": {
+            "type": "boolean",
+            "title": "Ready"
+          },
+          "questions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Questions"
+          },
+          "errors": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Errors"
+          },
+          "assumptions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Assumptions"
+          },
+          "unsupported_requirements": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Unsupported Requirements"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Warnings"
+          },
+          "planning_input": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PlanningInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "draft",
+          "ready",
+          "questions",
+          "errors",
+          "assumptions",
+          "unsupported_requirements",
+          "warnings",
+          "planning_input"
+        ],
+        "title": "WorkloadPreviewRead"
+      },
+      "WorkloadReviewRequest": {
+        "properties": {
+          "description": {
+            "type": "string",
+            "maxLength": 8000,
+            "minLength": 1,
+            "title": "Description"
+          },
+          "draft": {
+            "$ref": "#/components/schemas/WorkloadDraft"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "description",
+          "draft"
+        ],
+        "title": "WorkloadReviewRequest"
       }
     }
   }

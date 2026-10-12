@@ -106,6 +106,10 @@ export default function ExportDialog({
               {labels[r.method]} · {r.metrics?.machine_count} machines
             </strong>
             <span>
+              {r.must_finish_job_ids?.length ?? 0} hard deadlines
+              {r.must_finish_job_ids?.length ? `: ${r.must_finish_job_ids.join(", ")}` : ""}
+            </span>
+            <span>
               {r.method === "milp" ? r.solver_status.replaceAll("_", " ") : "validated baseline"} ·{" "}
               {r.id.slice(0, 8)}
             </span>

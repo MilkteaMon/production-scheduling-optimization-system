@@ -38,7 +38,7 @@ def solver_available() -> bool:
         return False
 
 
-def build_model(data: PlanningInput, seed_schedule: ScheduleResult):
+def build_model(data: PlanningInput, seed_schedule: ScheduleResult | None):
     jobs = sorted(data.jobs, key=lambda j: j.job_id)
     n, m, horizon = len(jobs), data.machine_count, data.horizon_min
     model = pulp.LpProblem("OpsPilot_weighted_tardiness", pulp.LpMinimize)
@@ -61,6 +61,8 @@ def build_model(data: PlanningInput, seed_schedule: ScheduleResult):
     for i, job in enumerate(jobs):
         model += pulp.lpSum(x[i, k] for k in range(m)) == 1
         model += tardy[i] >= start[i] + job.processing_time_min - job.due_time_min
+        if job.job_id in data.must_finish_job_ids:
+            model += start[i] + job.processing_time_min <= job.due_time_min
     for i in range(n):
         for j in range(i + 1, n):
             for k in range(m):
@@ -70,6 +72,8 @@ def build_model(data: PlanningInput, seed_schedule: ScheduleResult):
                 model += start[j] + jobs[j].processing_time_min <= start[i] + horizon * (
                     2 + y[i, j] - x[i, k] - x[j, k]
                 )
+    if seed_schedule is None:
+        return model, jobs, x, start
     initial = {p.job_id: p for p in seed_schedule.placements}
     for i, job in enumerate(jobs):
         p = initial[job.job_id]
@@ -115,16 +119,33 @@ def extract_candidate(data, jobs, x, start):
 def optimize(data: PlanningInput, time_limit_seconds: float = 60, seed: int = 42) -> ScheduleResult:
     clock = perf_counter()
     baselines = [schedule_heuristic(data, "fcfs"), schedule_heuristic(data, "edd")]
-    best = min(
-        baselines, key=lambda r: (r.metrics.total_weighted_tardiness, r.metrics.makespan_min)
+    feasible = [r for r in baselines if not validate_schedule(data, r.placements)]
+    best = (
+        min(feasible, key=lambda r: (r.metrics.total_weighted_tardiness, r.metrics.makespan_min))
+        if feasible
+        else None
     )
     result = ScheduleResult(
         method="milp",
-        placements=best.placements,
-        result_source="heuristic_fallback",
+        placements=best.placements if best else [],
+        result_source="heuristic_fallback" if best else None,
         solver_status="error",
-        metrics=best.metrics,
+        metrics=best.metrics if best else None,
     )
+    impossible = [
+        j
+        for j in data.jobs
+        if j.job_id in data.must_finish_job_ids
+        and j.release_time_min + j.processing_time_min > j.due_time_min
+    ]
+    if impossible:
+        result.solver_status = "infeasible"
+        result.diagnostics = [
+            f"{j.job_id}: earliest completion {j.release_time_min + j.processing_time_min} min exceeds hard deadline {j.due_time_min} min"
+            for j in impossible
+        ]
+        result.total_runtime_seconds = perf_counter() - clock
+        return result
     try:
         if not solver_available():
             raise RuntimeError("CBC unavailable; install the locked pulp[cbc] dependency")
@@ -138,7 +159,7 @@ def optimize(data: PlanningInput, time_limit_seconds: float = 60, seed: int = 42
                 timeLimit=time_limit_seconds,
                 threads=1,
                 randomSeed=seed,
-                warmStart=True,
+                warmStart=best is not None,
                 keepFiles=True,
                 gapRel=0,
                 gapAbs=0,
@@ -176,7 +197,7 @@ def optimize(data: PlanningInput, time_limit_seconds: float = 60, seed: int = 42
                 metrics = calculate_metrics(data, candidate)
                 if (
                     metrics.total_weighted_tardiness
-                    <= best.metrics.total_weighted_tardiness + TOLERANCE
+                    <= (best.metrics.total_weighted_tardiness if best else math.inf) + TOLERANCE
                 ):
                     result.placements = candidate
                     result.metrics = metrics
@@ -192,20 +213,29 @@ def optimize(data: PlanningInput, time_limit_seconds: float = 60, seed: int = 42
                             "Optimality claim inconsistent with a known feasible schedule"
                         )
             elif result.solver_status in ("infeasible", "unbounded"):
-                result.diagnostics.append(
-                    "Unexpected termination: this input has a known feasible baseline"
-                )
+                if best or result.solver_status == "unbounded":
+                    result.diagnostics.append(
+                        "Unexpected termination: known feasible baseline or bounded model"
+                    )
+                else:
+                    result.diagnostics.append("CBC proved no schedule satisfies all hard deadlines")
             else:
-                result.diagnostics.append("No solver incumbent; retaining a validated heuristic")
+                result.diagnostics.append(
+                    "No solver incumbent; retaining a validated heuristic"
+                    if best
+                    else "No feasible schedule found within this run; this does not prove infeasibility"
+                )
     except Exception as exc:
         result.solver_status = "error"
         result.proven_optimal = False
         result.diagnostics.append(f"{type(exc).__name__}: {exc}")
-    result.validation_errors = validate_schedule(data, result.placements)
+    result.validation_errors = (
+        validate_schedule(data, result.placements) if result.placements else []
+    )
     if result.validation_errors:
         result.proven_optimal = False
-    objective = result.metrics.total_weighted_tardiness
-    if result.best_bound is not None:
+    objective = result.metrics.total_weighted_tardiness if result.metrics else None
+    if result.best_bound is not None and objective is not None:
         if result.best_bound <= objective + TOLERANCE:
             result.relative_gap = max(0, objective - result.best_bound) / max(abs(objective), 1)
         else:

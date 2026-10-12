@@ -38,12 +38,18 @@ import {
   type Method,
   type Run,
   type Scenario,
+  type RulesPreview,
+  type RulesApplied,
 } from "./api/client";
 import DataDialog from "./components/DataDialog";
+import WorkloadDescriptionDialog from "./components/WorkloadDescriptionDialog";
 import DatasetManager from "./components/DatasetManager";
 import ExportDialog from "./components/ExportDialog";
 import MetricHelp, { MetricLabel, type MetricTopic } from "./components/MetricHelp";
 import ComparisonExplanation from "./components/ComparisonExplanation";
+import RulesDialog from "./components/RulesDialog";
+import RunExplanation from "./components/RunExplanation";
+import ScenarioWorkbench from "./components/ScenarioWorkbench";
 import { datasetDescription, visibleDatasets } from "./data/datasets";
 import { PRODUCT_NAME } from "./data/branding";
 import { useStoredState } from "./hooks/useStoredState";
@@ -69,6 +75,12 @@ function Status({ run }: { run?: Run }) {
     );
   if (run.execution_state === "failed" || run.execution_state === "interrupted")
     return <span className="badge amber">{run.execution_state}</span>;
+  if (!run.has_valid_schedule)
+    return (
+      <span className="badge amber">
+        {run.solver_status === "infeasible" ? "Infeasible" : "No feasible result found"}
+      </span>
+    );
   if (run.proven_optimal)
     return (
       <span className="badge green">
@@ -106,10 +118,13 @@ export default function App() {
     [error, setError] = useState(""),
     [busy, setBusy] = useState(false),
     [job, setJob] = useState<Job | null>(null);
+  const [descriptionOpen, setDescriptionOpen] = useState(false);
   const [question, setQuestion] = useState(""),
     [answers, setAnswers] = useState<{ question: string; response: CopilotResponse }[]>([]),
     [thinking, setThinking] = useState(false);
   const [solverBudget, setSolverBudget] = useState(60);
+  const [rulesOpen, setRulesOpen] = useState(false);
+  const [rulesProposal, setRulesProposal] = useState<RulesPreview | null>(null);
   const health = useQuery({ queryKey: ["health"], queryFn: () => api<Health>("/health") });
   const datasets = useQuery({
     queryKey: ["datasets"],
@@ -247,6 +262,15 @@ export default function App() {
     setBusy(true);
     setError("");
     try {
+      if (scenario?.must_finish_job_ids?.length) {
+        const proposal = await post<RulesPreview>(`/scenarios/${scenario.id}/rules/preview`, {
+          job_ids: [],
+          add_machine: true,
+        });
+        setRulesProposal(proposal);
+        setRulesOpen(true);
+        return;
+      }
       const s = await post<Scenario>(`/datasets/${dataset.id}/scenarios`, {});
       await post(`/scenarios/${s.id}/runs`, {
         methods: ["fcfs", "edd", "milp"],
@@ -281,6 +305,15 @@ export default function App() {
     }
   }
   const metrics = run?.metrics;
+  async function rulesCreated(result: RulesApplied) {
+    await client.invalidateQueries({ queryKey: ["datasets"] });
+    await client.invalidateQueries({ queryKey: ["runs"] });
+    setScenarioId(result.scenario.id);
+    setMethod("milp");
+    setRulesOpen(false);
+    setRulesProposal(null);
+    setPage("Scenarios");
+  }
   return (
     <div className="app-shell">
       <aside className="sidebar">
@@ -401,6 +434,9 @@ export default function App() {
                 <Plus size={16} />
                 Load data
               </button>
+              <button className="button secondary" onClick={() => setDescriptionOpen(true)}>
+                <Sparkles size={16} /> Describe workload
+              </button>
               <button className="button secondary" onClick={() => setManagerOpen(true)}>
                 <Database size={16} /> Manage datasets
               </button>
@@ -421,6 +457,16 @@ export default function App() {
                 {busy ? <LoaderCircle size={16} className="spin" /> : <Sparkles size={16} />}
                 Optimize schedule
               </button>
+              <button
+                className="button secondary"
+                disabled={!dataset || !scenario}
+                onClick={() => {
+                  setRulesProposal(null);
+                  setRulesOpen(true);
+                }}
+              >
+                Plan commitments / What-if
+              </button>
             </div>
           </div>
           {(error || datasets.error || runs.error) && (
@@ -430,6 +476,23 @@ export default function App() {
               <button aria-label="Dismiss error" onClick={() => setError("")}>
                 <X size={16} />
               </button>
+            </div>
+          )}
+          {scenario && !!scenario.must_finish_job_ids?.length && (
+            <div className="notice">
+              Hard deadlines: {scenario.must_finish_job_ids.join(", ")}. Other due times remain soft
+              targets.
+            </div>
+          )}
+          {selected && !active(selected) && !selected.has_valid_schedule && (
+            <div className="notice" role="status">
+              <strong>
+                {labels[selected.method]}:{" "}
+                {selected.solver_status === "infeasible"
+                  ? "No feasible schedule under these commitments"
+                  : "No validated result"}
+              </strong>
+              <p>{selected.validation_errors.concat(selected.diagnostics).join(" · ")}</p>
             </div>
           )}
           {!dataset ? (
@@ -915,6 +978,13 @@ export default function App() {
                     </section>
                   )}
                   <ComparisonExplanation runs={ready} />
+                  {selected && !active(selected) && (
+                    <RunExplanation
+                      key={selected.id}
+                      run={selected}
+                      choices={ready.map((r) => ({ run: r, label: labels[r.method] }))}
+                    />
+                  )}
                   <MethodNotes />
                   {methods.find((r) => r.method === "milp") && (
                     <section className="panel diagnostics">
@@ -935,90 +1005,102 @@ export default function App() {
               )}
               {page === "Scenarios" && (
                 <>
-                  <section className="scenario-hero panel">
-                    <div className="scenario-icon">
-                      <Factory size={35} />
-                    </div>
-                    <div>
-                      <span className="eyebrow">CAPACITY EXPLORATION</span>
-                      <h2>What changes with one more machine?</h2>
-                      <p>
-                        Use the same jobs and planning horizon. Keep all original data and results.
-                      </p>
-                    </div>
-                    <button
-                      className="button primary"
-                      disabled={busy || extraRuns.data?.some(active)}
-                      onClick={simulate}
-                    >
-                      <Plus size={16} />
-                      {extra ? "Rerun scenario" : "Simulate additional machine"}
-                    </button>
-                  </section>
-                  <div className="scenario-grid">
-                    {[
-                      { name: "Current capacity", s: baseline, r: baseBest },
-                      { name: "One additional machine", s: extra, r: extraBest },
-                    ].map(({ name, s, r }) => (
-                      <section className="panel scenario-card" key={name}>
-                        <span className="eyebrow">{name.toUpperCase()}</span>
-                        <h2>{s ? `${s.machine_count} machines` : "Not simulated"}</h2>
-                        <Status run={r} />
-                        {r?.metrics ? (
-                          <>
-                            <div className="scenario-metric">
-                              <strong>{fmt(r.metrics.total_weighted_tardiness)}</strong>
-                              <span>weighted minutes of tardiness</span>
-                            </div>
-                            <div className="scenario-mini">
-                              <span>
-                                Late jobs <strong>{r.metrics.late_jobs}</strong>
-                              </span>
-                              <span>
-                                Makespan <strong>{r.metrics.makespan_min} min</strong>
-                              </span>
-                              <span>
-                                Window utilization{" "}
-                                <strong>{percent(r.metrics.window_utilization)}</strong>
-                              </span>
-                            </div>
-                            <p className="muted">
-                              Best known of latest method runs · {labels[r.method]} ·{" "}
-                              {r.result_source?.replaceAll("_", " ")}
-                            </p>
-                          </>
-                        ) : (
-                          <p className="muted">
-                            {extraRuns.data?.some(active) && name === "One additional machine"
-                              ? "Calculating scenario schedules…"
-                              : "Run the scenario to view calculated results."}
+                  <ScenarioWorkbench
+                    dataset={dataset}
+                    onSelect={(s) => {
+                      setScenarioId(s.id);
+                      setMethod("milp");
+                    }}
+                  />
+                  {!scenario?.kind.startsWith("what_if:") && (
+                    <>
+                      <section className="scenario-hero panel">
+                        <div className="scenario-icon">
+                          <Factory size={35} />
+                        </div>
+                        <div>
+                          <span className="eyebrow">CAPACITY EXPLORATION</span>
+                          <h2>What changes with one more machine?</h2>
+                          <p>
+                            Use the same jobs and planning horizon. Keep all original data and
+                            results.
                           </p>
-                        )}
+                        </div>
+                        <button
+                          className="button primary"
+                          disabled={busy || extraRuns.data?.some(active)}
+                          onClick={simulate}
+                        >
+                          <Plus size={16} />
+                          {extra ? "Rerun scenario" : "Simulate additional machine"}
+                        </button>
                       </section>
-                    ))}
-                  </div>
-                  {scenarioComparison.data && (
-                    <div className="notice">
-                      <CheckCircle2 size={18} />
-                      <p>
-                        Weighted tardiness reduction:{" "}
-                        <strong>
-                          {fmt(
-                            scenarioComparison.data.runs[1].changes.total_weighted_tardiness
-                              .absolute_reduction,
-                          )}{" "}
-                          weighted min
-                        </strong>
-                        . This compares the best known schedules, not necessarily proven optima.
-                        Capacity effects do not establish purchasing ROI.
+                      <div className="scenario-grid">
+                        {[
+                          { name: "Current capacity", s: baseline, r: baseBest },
+                          { name: "One additional machine", s: extra, r: extraBest },
+                        ].map(({ name, s, r }) => (
+                          <section className="panel scenario-card" key={name}>
+                            <span className="eyebrow">{name.toUpperCase()}</span>
+                            <h2>{s ? `${s.machine_count} machines` : "Not simulated"}</h2>
+                            <Status run={r} />
+                            {r?.metrics ? (
+                              <>
+                                <div className="scenario-metric">
+                                  <strong>{fmt(r.metrics.total_weighted_tardiness)}</strong>
+                                  <span>weighted minutes of tardiness</span>
+                                </div>
+                                <div className="scenario-mini">
+                                  <span>
+                                    Late jobs <strong>{r.metrics.late_jobs}</strong>
+                                  </span>
+                                  <span>
+                                    Makespan <strong>{r.metrics.makespan_min} min</strong>
+                                  </span>
+                                  <span>
+                                    Window utilization{" "}
+                                    <strong>{percent(r.metrics.window_utilization)}</strong>
+                                  </span>
+                                </div>
+                                <p className="muted">
+                                  Best known of latest method runs · {labels[r.method]} ·{" "}
+                                  {r.result_source?.replaceAll("_", " ")}
+                                </p>
+                              </>
+                            ) : (
+                              <p className="muted">
+                                {extraRuns.data?.some(active) && name === "One additional machine"
+                                  ? "Calculating scenario schedules…"
+                                  : "Run the scenario to view calculated results."}
+                              </p>
+                            )}
+                          </section>
+                        ))}
+                      </div>
+                      {scenarioComparison.data && (
+                        <div className="notice">
+                          <CheckCircle2 size={18} />
+                          <p>
+                            Weighted tardiness reduction:{" "}
+                            <strong>
+                              {fmt(
+                                scenarioComparison.data.runs[1].changes.total_weighted_tardiness
+                                  .absolute_reduction,
+                              )}{" "}
+                              weighted min
+                            </strong>
+                            . This compares the best known schedules, not necessarily proven optima.
+                            Capacity effects do not establish purchasing ROI.
+                          </p>
+                        </div>
+                      )}
+                      <p className="muted scenario-caveat">
+                        An extra machine can reduce the true optimal tardiness. Time-limited
+                        searches may return different incumbent quality; the displayed changes are
+                        measured outcomes.
                       </p>
-                    </div>
+                    </>
                   )}
-                  <p className="muted scenario-caveat">
-                    An extra machine can reduce the true optimal tardiness. Time-limited searches
-                    may return different incumbent quality; the displayed changes are measured
-                    outcomes.
-                  </p>
                 </>
               )}
               {page === "Data explorer" && (
@@ -1099,6 +1181,23 @@ export default function App() {
             setMethod("edd");
             setPage("Overview");
             setAnswers([]);
+          }}
+        />
+      )}
+      {descriptionOpen && (
+        <WorkloadDescriptionDialog
+          available={health.data?.ai_available ?? false}
+          budget={solverBudget}
+          onClose={() => setDescriptionOpen(false)}
+          onCreated={(d) => {
+            client.invalidateQueries({ queryKey: ["datasets"] });
+            client.invalidateQueries({ queryKey: ["runs"] });
+            selectDataset(d);
+            setScenarioId(d.scenarios[0].id);
+            setMethod("milp");
+            setPage("Overview");
+            setAnswers([]);
+            setDescriptionOpen(false);
           }}
         />
       )}
@@ -1194,6 +1293,16 @@ export default function App() {
           <p className="muted">Due times are soft targets. Jobs remain schedulable when late.</p>
         </DialogFrame>
       )}
+      {rulesOpen && dataset && scenario && (
+        <RulesDialog
+          dataset={dataset}
+          scenario={scenario}
+          budget={solverBudget}
+          proposal={rulesProposal}
+          onClose={() => setRulesOpen(false)}
+          onCreated={rulesCreated}
+        />
+      )}
       {copilotOpen && (
         <DialogFrame
           onClose={() => setCopilotOpen(false)}
@@ -1207,7 +1316,11 @@ export default function App() {
             </span>
             <div>
               <h2 id="copilot-title">Operations copilot</h2>
-              <p>Grounded in your actual schedule</p>
+              <p>
+                {health.data?.ai_available && health.data.ai_model === "gpt-6.1-sol"
+                  ? "GPT-6.1 Sol · Low reasoning"
+                  : "Grounded in your actual schedule"}
+              </p>
             </div>
             <button
               className="icon-button"
@@ -1232,8 +1345,8 @@ export default function App() {
                 </p>
                 <div className="notice">
                   <p>
-                    To enable the copilot, configure AI_ENABLED, OPENAI_API_KEY and OPENAI_MODEL on
-                    the backend.
+                    Connect an OpenAI API account or a local ChatGPT Codex login to enable the
+                    copilot.
                   </p>
                 </div>
                 <button
@@ -1252,12 +1365,16 @@ export default function App() {
                   Context: {dataset?.name ?? "No dataset selected"} ·{" "}
                   {run ? labels[run.method] : "No schedule yet"}
                 </p>
+                {health.data?.ai_provider === "codex_subscription" && (
+                  <p className="muted">Connected through your local ChatGPT subscription.</p>
+                )}
                 <div className="suggested-questions">
                   {[
                     "Which orders are late?",
                     "Show machine utilization",
                     "Optimize the production schedule",
                     "What changes with another machine?",
+                    "Explain the weighted tardiness tradeoffs",
                   ].map((q) => (
                     <button
                       key={q}
@@ -1300,6 +1417,26 @@ export default function App() {
                     </div>
                     {a.response.interpretation && (
                       <p className="muted">Interpretation: {a.response.interpretation}</p>
+                    )}
+                    {a.response.proposal && (
+                      <div className="notice">
+                        <h3>Scenario proposal — awaiting confirmation</h3>
+                        <p>
+                          {a.response.proposal.job_ids.join(", ") || "No additional hard deadlines"}{" "}
+                          · {a.response.proposal.machine_count} machines
+                        </p>
+                        <button
+                          className="button primary"
+                          disabled={a.response.proposal.scenario_id !== scenario?.id}
+                          onClick={() => {
+                            setRulesProposal(a.response.proposal!);
+                            setCopilotOpen(false);
+                            setRulesOpen(true);
+                          }}
+                        >
+                          Review proposed scenario
+                        </button>
+                      </div>
                     )}
                     {a.response.fallback && (
                       <p className="muted">

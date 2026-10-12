@@ -14,7 +14,13 @@ from sqlalchemy import select, update
 
 from opspilot import SOLVER_ADAPTER_VERSION
 from opspilot.analytics.metrics import calculate_metrics, late_jobs, machine_utilization, reduction
-from opspilot.domain.models import Job, Placement, PlanningInput, RunRequest, ScheduleResult
+from opspilot.domain.models import (
+    Job,
+    Placement,
+    PlanningInput,
+    RunRequest,
+    ScheduleResult,
+)
 from opspilot.persistence.models import (
     Dataset,
     JobRecord,
@@ -125,6 +131,7 @@ class ApplicationService:
             "dataset_id": s.dataset_id,
             "name": s.name,
             "kind": s.kind,
+            "must_finish_job_ids": s.must_finish_job_ids or [],
             "parent_scenario_id": s.parent_scenario_id,
             "machine_count": len(machines),
             "machines": [{"id": m.id, "machine_code": m.machine_code} for m in machines],
@@ -146,11 +153,116 @@ class ApplicationService:
                 jobs=[Job(**self.job_dict(j)) for j in jobs],
                 machine_count=info["machine_count"],
                 horizon_min=dataset.horizon_min,
+                must_finish_job_ids=info["must_finish_job_ids"],
             ), info
 
-    def create_dataset(self, data, name, source_kind, params=None):
+    def preview_rules(self, scenario_id, request):
+        data, scenario = self.scenario_input(scenario_id)
+        unknown = set(request.job_ids) - {j.job_id for j in data.jobs}
+        if unknown:
+            raise HTTPException(
+                422, "Unknown job IDs in this dataset: " + ", ".join(sorted(unknown))
+            )
+        count = data.machine_count + int(request.add_machine)
+        if count > 6:
+            raise HTTPException(
+                422, "At most six machines are supported, including the additional machine"
+            )
+        ids = sorted(set(data.must_finish_job_ids) | set(request.job_ids))
+        if not ids and not request.add_machine:
+            raise HTTPException(422, "Select at least one hard-deadline job or add one machine")
+        constrained = data.model_copy(update={"machine_count": count, "must_finish_job_ids": ids})
+        deadlines = [
+            {
+                "job_id": j.job_id,
+                "due_time_min": j.due_time_min,
+                "earliest_completion_min": j.release_time_min + j.processing_time_min,
+            }
+            for j in data.jobs
+            if j.job_id in ids
+        ]
+        return {
+            "scenario_id": scenario_id,
+            "dataset_id": scenario["dataset_id"],
+            "job_hash": data.job_hash,
+            "horizon_min": data.horizon_min,
+            "input_hash": constrained.input_hash,
+            "base_machine_count": data.machine_count,
+            "machine_count": count,
+            "job_ids": ids,
+            "add_machine": request.add_machine,
+            "deadlines": deadlines,
+            "warnings": [
+                f"{d['job_id']}: earliest completion exceeds its hard deadline"
+                for d in deadlines
+                if d["earliest_completion_min"] > d["due_time_min"]
+            ],
+        }
+
+    def apply_rules(self, scenario_id, request):
+        if not request.confirmed:
+            raise HTTPException(422, "Confirm the previewed scenario rules first")
         with self.lock:
-            if self.closing or self.pending + 2 > self.settings.queue_limit + 1:
+            preview = self.preview_rules(scenario_id, request)
+            if self.closing or self.pending + 3 > self.settings.queue_limit + 1:
+                raise HTTPException(429, "Scheduling queue is full; retry shortly")
+            kind = "what_if:" + preview["input_hash"]
+            with self.sessions.begin() as session:
+                existing = session.scalar(
+                    select(Scenario).where(
+                        Scenario.dataset_id == preview["dataset_id"], Scenario.kind == kind
+                    )
+                )
+                if existing:
+                    info = self.scenario_dict(existing, session)
+                else:
+                    scenario = Scenario(
+                        dataset_id=preview["dataset_id"],
+                        parent_scenario_id=scenario_id,
+                        kind=kind,
+                        name=f"{preview['machine_count']} machines · {len(preview['job_ids'])} hard deadlines",
+                        must_finish_job_ids=preview["job_ids"],
+                    )
+                    session.add(scenario)
+                    session.flush()
+                    session.add_all(
+                        Machine(scenario_id=scenario.id, machine_code=f"M{k}")
+                        for k in range(1, preview["machine_count"] + 1)
+                    )
+                    session.flush()
+                    info = self.scenario_dict(scenario, session)
+            runs = self.list_runs(info["id"])
+            cached = [
+                next(
+                    (
+                        r
+                        for r in runs
+                        if r["method"] == method
+                        and r["solver_config"]["time_limit_seconds"] == request.time_limit_seconds
+                    ),
+                    None,
+                )
+                for method in ["fcfs", "edd", "milp"]
+            ]
+            if all(cached):
+                ids = [r["id"] for r in cached]
+            else:
+                ids = self.queue_runs(
+                    info["id"],
+                    RunRequest(
+                        methods=["fcfs", "edd", "milp"],
+                        time_limit_seconds=request.time_limit_seconds,
+                    ),
+                )["run_ids"]
+            return {"scenario": info, "run_ids": ids, "preview": preview}
+
+    def create_dataset(self, data, name, source_kind, params=None, initial_run_request=None):
+        initial_run_request = initial_run_request or RunRequest(methods=["fcfs", "edd"])
+        with self.lock:
+            if (
+                self.closing
+                or self.pending + len(initial_run_request.methods) > self.settings.queue_limit + 1
+            ):
                 raise HTTPException(429, "Scheduling queue is full; retry before creating data")
             with self.sessions.begin() as session:
                 dataset = Dataset(
@@ -168,7 +280,12 @@ class ApplicationService:
                     JobRecord(dataset_id=dataset.id, **j.model_dump()) for j in data.jobs
                 )
                 session.flush()
-                scenario = Scenario(dataset_id=dataset.id, name="Current capacity", kind="baseline")
+                scenario = Scenario(
+                    dataset_id=dataset.id,
+                    name="Current capacity",
+                    kind="baseline",
+                    must_finish_job_ids=data.must_finish_job_ids,
+                )
                 session.add(scenario)
                 session.flush()
                 session.add_all(
@@ -176,7 +293,7 @@ class ApplicationService:
                     for k in range(1, data.machine_count + 1)
                 )
                 dataset_id, scenario_id = dataset.id, scenario.id
-            self.queue_runs(scenario_id, RunRequest(methods=["fcfs", "edd"]))
+            self.queue_runs(scenario_id, initial_run_request)
             return self.dataset_detail(dataset_id)
 
     def add_machine(self, dataset_id):
@@ -199,11 +316,14 @@ class ApplicationService:
                 base_machines = session.scalars(
                     select(Machine).where(Machine.scenario_id == baseline.id)
                 ).all()
+                if len(base_machines) >= 6:
+                    raise HTTPException(422, "At most six machines are supported")
                 scenario = Scenario(
                     dataset_id=dataset_id,
                     parent_scenario_id=baseline.id,
                     name="One additional machine",
                     kind="additional_machine",
+                    must_finish_job_ids=baseline.must_finish_job_ids or [],
                 )
                 session.add(scenario)
                 session.flush()
@@ -238,12 +358,14 @@ class ApplicationService:
                         scenario_id=scenario_id,
                         method=method,
                         input_hash=data.input_hash,
+                        model_version="2.0",
                         solver_config={
                             "time_limit_seconds": request.time_limit_seconds,
                             "solver": "cbc",
                             "threads": 1,
                             "seed": 42,
                             "adapter_version": SOLVER_ADAPTER_VERSION,
+                            "must_finish_job_ids": data.must_finish_job_ids,
                         },
                     )
                     for method in request.methods
@@ -270,7 +392,10 @@ class ApplicationService:
                 result = schedule_heuristic(data, method)
             else:
                 result = self.execute_worker(data, budget)
-            independent_errors = validate_schedule(data, result.placements)
+            independent_errors = (
+                validate_schedule(data, result.placements) if result.placements else []
+            )
+            valid = bool(result.placements) and not independent_errors
             with self.sessions.begin() as session:
                 run = session.get(ScheduleRun, run_id)
                 scenario = session.get(Scenario, run.scenario_id)
@@ -280,8 +405,16 @@ class ApplicationService:
                         select(Machine).where(Machine.scenario_id == run.scenario_id)
                     )
                 }
-                run.execution_state = "completed" if not independent_errors else "failed"
-                run.has_valid_schedule = not independent_errors
+                run.execution_state = (
+                    "completed"
+                    if valid
+                    or (
+                        not result.placements
+                        and result.solver_status in ["infeasible", "time_limit", "gap_limit"]
+                    )
+                    else "failed"
+                )
+                run.has_valid_schedule = valid
                 for field in [
                     "solver_status",
                     "result_source",
@@ -291,11 +424,11 @@ class ApplicationService:
                     "diagnostics",
                 ]:
                     setattr(run, field, getattr(result, field))
-                run.proven_optimal = result.proven_optimal and not independent_errors
+                run.proven_optimal = result.proven_optimal and valid
                 run.validation_errors = independent_errors
                 run.total_runtime_seconds = perf_counter() - clock
                 run.finished_at = now()
-                if not independent_errors:
+                if valid:
                     metrics = calculate_metrics(data, result.placements)
                     run.metrics = metrics.model_dump()
                     run.objective = metrics.total_weighted_tardiness
@@ -345,8 +478,23 @@ class ApplicationService:
             return ScheduleResult.model_validate_json(output)
         except subprocess.TimeoutExpired:
             self.kill_tree(process)
+            feasible = [
+                r
+                for r in [schedule_heuristic(data, "fcfs"), schedule_heuristic(data, "edd")]
+                if not validate_schedule(data, r.placements)
+            ]
+            if not feasible:
+                return ScheduleResult(
+                    method="milp",
+                    placements=[],
+                    result_source=None,
+                    solver_status="time_limit",
+                    diagnostics=[
+                        "Watchdog terminated solver; no feasible schedule found. Infeasibility is not proven."
+                    ],
+                )
             baseline = min(
-                [schedule_heuristic(data, "fcfs"), schedule_heuristic(data, "edd")],
+                feasible,
                 key=lambda r: r.metrics.total_weighted_tardiness,
             )
             return baseline.model_copy(
@@ -390,6 +538,8 @@ class ApplicationService:
                 "finished_at",
             ]
             result = {field: getattr(run, field) for field in fields}
+            scenario = session.get(Scenario, run.scenario_id)
+            result["must_finish_job_ids"] = scenario.must_finish_job_ids or []
             items = session.execute(
                 select(ScheduleItem, Machine.machine_code)
                 .join(Machine, ScheduleItem.machine_id == Machine.id)
@@ -432,6 +582,7 @@ class ApplicationService:
                     **run,
                     "machine_count": data.machine_count,
                     "scenario_name": scenario["name"],
+                    "constraints_differ": data.must_finish_job_ids != first.must_finish_job_ids,
                     "changes": {
                         k: reduction(baseline[k], run["metrics"][k])
                         for k in ["late_jobs", "total_weighted_tardiness", "makespan_min"]
@@ -468,6 +619,7 @@ class ApplicationService:
                     "priority_weight": jobs[p.job_id].priority_weight,
                     "weighted_tardiness": max(0, p.completion_min - jobs[p.job_id].due_time_min)
                     * jobs[p.job_id].priority_weight,
+                    "must_finish_on_time": p.job_id in data.must_finish_job_ids,
                 }
                 for p in placements
             ]
@@ -478,6 +630,8 @@ class ApplicationService:
                     "job_hash": data.job_hash,
                     "input_hash": run["input_hash"],
                     "model_version": run["model_version"],
+                    "hard_deadline_count": len(data.must_finish_job_ids),
+                    "must_finish_job_ids": ",".join(data.must_finish_job_ids),
                     "time_limit_seconds": run["solver_config"]["time_limit_seconds"],
                     "created_at": run["created_at"],
                     "finished_at": run["finished_at"],

@@ -1,0 +1,75 @@
+{
+  "verified_at_utc": "2026-10-12T17:51:23.411439+00:00",
+  "features": [
+    "selected existing due times as hard deadlines",
+    "confirmed what-if scenarios with one additional machine",
+    "computed run explanations and per-job KPI contributions"
+  ],
+  "checks": {
+    "backend_pytest": {
+      "passed": 62
+    },
+    "frontend_unit": {
+      "passed": 8
+    },
+    "desktop_mobile_browser_full_suite": {
+      "passed": 20
+    },
+    "browser_planning_and_planner_after_ui_adjustment": {
+      "passed": 8
+    },
+    "browser_power_bi_after_export_display_adjustment": {
+      "passed": 2
+    },
+    "ruff": "passed",
+    "eslint": "passed",
+    "typescript_build": "passed",
+    "generated_api_idempotent": true,
+    "git_diff_check": "passed"
+  },
+  "solver_validation": "Actual local CBC solves plus an independent exhaustive small-instance oracle; language-model tests use mocks.",
+  "live_provider_calls_executed": false,
+  "real_language_model_interpretation_verified": false,
+  "openai_reasoning_effort": "low",
+  "deepseek_provider_implemented": false,
+  "database_migration": {
+    "revision": "0003",
+    "original_records_unchanged": true,
+    "original_counts": {
+      "datasets": 34,
+      "jobs": 276,
+      "scenarios": 53,
+      "machines": 199,
+      "schedule_runs": 148,
+      "schedule_items": 1544,
+      "copilot_queries": 0
+    },
+    "backup_created": true
+  },
+  "runtime": {
+    "application_port": 8000,
+    "isolated_browser_test_port": 8011,
+    "task_owned_preview_stopped": true,
+    "original_screenshots_restored": true,
+    "sqlalchemy": "2.1.4, same locked version rebuilt without compiled extensions"
+  },
+  "git_actions_performed": {
+    "stage": false,
+    "commit": false,
+    "push": false,
+    "pull_request": false,
+    "merge": false
+  },
+  "source_sha256": {
+    "backend/src/opspilot/domain/models.py": "c302338a50edaeb11fa2d96daa60ea8186c7679cfe2e112908f07fecc117db6a",
+    "backend/src/opspilot/scheduling/milp.py": "655af4e6450a534f297c2e05046a9952426bb28a5ffd22833e449ec587e0f6f1",
+    "backend/src/opspilot/services/application.py": "f83fa977230fa8913c660dd366a58f21956e5b4c4eaedee4a40cd57538dc1f67",
+    "backend/src/opspilot/services/explanations.py": "440325a36c33de33d0af2f3f8acb6d057d91b8518a5e0cec4f6261433ca4905f",
+    "backend/src/opspilot/agents/copilot.py": "74fe66edf2f31f622e121a614b62acd11439ffd387d0e831c545891fce8dc032",
+    "backend/openapi.json": "8c31a990e13e4399719142bd3e828e53a2b6e387936fa1f2f9ffc7ecf54fee75",
+    "frontend/src/api/schema.d.ts": "7c06b0fc23cad1f3265d6d79ab852f2a56967fde047d51bcd0c91071277d5174",
+    "frontend/src/App.tsx": "482358870bd723d2ec2f2e5a23df51f73e47496c5c96e06dc585674c4dab12f7",
+    "frontend/src/components/ExportDialog.tsx": "b92facd7a31082bb654a63337cfccc7e3758943b5187a8443b3ad3edb73e231a",
+    "frontend/tests/planning.spec.ts": "60081b39ef740e3a9a0f7cc55c0a1b0bd7bae8ce5aa0dc57c5077915fe112ed7"
+  }
+}

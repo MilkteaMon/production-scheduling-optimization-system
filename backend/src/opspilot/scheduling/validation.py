@@ -30,6 +30,8 @@ def validate_schedule(data: PlanningInput, placements: list[Placement]) -> list[
             errors.append(f"{p.job_id}: incorrect processing duration")
         if p.completion_min > data.horizon_min + TOLERANCE:
             errors.append(f"{p.job_id}: planning horizon violated")
+        if p.job_id in data.must_finish_job_ids and p.completion_min > j.due_time_min + TOLERANCE:
+            errors.append(f"{p.job_id}: hard deadline violated (due {j.due_time_min} min)")
     for machine in machines:
         items = sorted(
             (p for p in placements if p.machine_code == machine), key=lambda p: p.start_min

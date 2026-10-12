@@ -182,6 +182,7 @@ def power_bi_bundle(service, run_ids: list[str]) -> bytes:
                     "best_bound",
                     "relative_gap",
                     "metrics",
+                    "must_finish_job_ids",
                     "created_at",
                     "finished_at",
                 ]

@@ -10,6 +10,11 @@ export type Health = components["schemas"]["HealthRead"];
 export type Preview = components["schemas"]["PreviewRead"];
 export type Evidence = components["schemas"]["EvidenceRead"];
 export type CopilotResponse = components["schemas"]["CopilotRead"];
+export type RulesPreview = components["schemas"]["RulesPreviewRead"];
+export type RulesApplied = components["schemas"]["RulesAppliedRead"];
+export type Explanation = components["schemas"]["ExplanationRead"];
+export type WorkloadDraft = components["schemas"]["WorkloadDraft"];
+export type WorkloadPreview = components["schemas"]["WorkloadPreviewRead"];
 
 export async function api<T>(path: string, options: RequestInit = {}): Promise<T> {
   const response = await fetch(`/api/v1${path}`, {

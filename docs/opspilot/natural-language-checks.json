@@ -1,0 +1,77 @@
+{
+  "verified_at_utc": "2026-10-12T19:09:26.124388+00:00",
+  "verified_at_singapore": "2026-10-13T03:09:26.124388+08:00",
+  "feature": "Natural-language workload draft, clarification, editing, explicit confirmation and actual scheduling",
+  "checks": {
+    "backend_tests_passed": 94,
+    "frontend_unit_tests_passed": 8,
+    "desktop_mobile_browser_tests_passed": 26,
+    "ruff": "passed",
+    "eslint": "passed",
+    "typescript_build": "passed",
+    "dialog_accessibility": "passed",
+    "body_horizontal_overflow": "none in tested desktop/mobile viewports"
+  },
+  "live_interpretations": {
+    "provider": "codex_subscription",
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "low",
+    "calls": 2,
+    "missing_due_times_stayed_null": true,
+    "follow_up_resolved_draft": true,
+    "no_records_before_confirmation": true,
+    "confirmation_retry_safe": true,
+    "duration_seconds": 14.49
+  },
+  "demonstration": {
+    "name": "Natural-language demo - 2 orders",
+    "dataset_id": "6bc7d4dd-a6fa-425e-bb12-d00f5873b871",
+    "orders": 2,
+    "machines": 2,
+    "hard_deadline_orders": [
+      "A"
+    ],
+    "milp_weighted_tardiness": 0,
+    "proven_optimal": true
+  },
+  "old_database_records_preserved": true,
+  "database_backup_created": true,
+  "new_database_migration_required": false,
+  "user_screenshots_restored": true,
+  "paid_platform_api_calls": false,
+  "broad_language_quality_evaluation": false,
+  "limits": {
+    "machines": [
+      1,
+      5
+    ],
+    "orders": [
+      1,
+      50
+    ],
+    "priority_weights": [
+      1,
+      10
+    ],
+    "time_basis": "whole minutes from common planning start",
+    "unstated_release_default": 0,
+    "unstated_priority_default": 1,
+    "defaults_require_visible_approval": true
+  },
+  "application_url": "http://127.0.0.1:8000/",
+  "app_running": true,
+  "test_service_8011_stopped": true,
+  "git_commit_or_push_performed": false,
+  "source_sha256": {
+    "backend/src/opspilot/domain/workload_drafts.py": "305a1f2855e9b2efc0484b9eadb316b61039febd3249780b5e1ddaca4d3b8576",
+    "backend/src/opspilot/agents/workload_parser.py": "20509701af571beb61d90dc7d2b759f4a86f8283482216feeb8220f7bdcc47d8",
+    "backend/src/opspilot/services/workload_drafts.py": "760a35b9986e930fef903c1bfa42cf45ad0ecaf90071b9ac8f0cbc54fb8366bb",
+    "backend/src/opspilot/services/application.py": "07d00b993c35426f1d3a64b0e227d85605f6e14294e6854f38a2b108e43f609d",
+    "backend/src/opspilot/api/main.py": "4f15708fa148cfdca1b653bb3861caa9cb302f3f5dfa9dac83ff5a975672401e",
+    "frontend/src/components/WorkloadDescriptionDialog.tsx": "76659160f50a7efa701c12de0f6b2f4db2f02617191fb81bcf8eddbc71705c5d",
+    "frontend/src/App.tsx": "077b39f89dcbee71b3965f8734dc45d0dad7595b94810d08e366e0af630c8c38",
+    "frontend/src/styles.css": "b38c4cb36ec1ccaf01d3f63454702ddf2a4f4960cbe0a0e47357a3853756238b",
+    "backend/openapi.json": "06bacf1eb1fcde1f82e624347096429bd20c6dcfc2aeac583d92f509529fdcb7",
+    "frontend/src/api/schema.d.ts": "19022d71a6b4e6e6c0484bd90289fc9a6dc52d40a56b35662941fcf229c0cc43"
+  }
+}

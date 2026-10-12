@@ -89,6 +89,57 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/natural-language/parse": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Describe Workload */
+    post: operations["describe_workload_api_v1_natural_language_parse_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/natural-language/review": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Review Description */
+    post: operations["review_description_api_v1_natural_language_review_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/natural-language/confirm": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Confirm Description */
+    post: operations["confirm_description_api_v1_natural_language_confirm_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/datasets/validate-csv": {
     parameters: {
       query?: never;
@@ -168,6 +219,57 @@ export interface paths {
     };
     /** Run */
     get: operations["run_api_v1_runs__run_id__get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/scenarios/{scenario_id}/rules/preview": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Preview Rules */
+    post: operations["preview_rules_api_v1_scenarios__scenario_id__rules_preview_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/scenarios/{scenario_id}/rules": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Apply Rules */
+    post: operations["apply_rules_api_v1_scenarios__scenario_id__rules_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/runs/{run_id}/explanation": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Explanation */
+    get: operations["explanation_api_v1_runs__run_id__explanation_get"];
     put?: never;
     post?: never;
     delete?: never;
@@ -408,10 +510,20 @@ export interface components {
       finished_at: string | null;
       /** Placements */
       placements: components["schemas"]["Placement"][];
+      /**
+       * Must Finish Job Ids
+       * @default []
+       */
+      must_finish_job_ids: string[];
       /** Machine Count */
       machine_count: number;
       /** Scenario Name */
       scenario_name: string;
+      /**
+       * Constraints Differ
+       * @default false
+       */
+      constraints_differ: boolean;
       /** Changes */
       changes: {
         [key: string]: components["schemas"]["ReductionRead"];
@@ -446,6 +558,7 @@ export interface components {
       pending_run_ids: string[];
       /** Fallback */
       fallback: boolean;
+      proposal?: components["schemas"]["RulesPreviewRead"] | null;
     };
     /** CopilotRequest */
     CopilotRequest: {
@@ -490,6 +603,32 @@ export interface components {
       /** Is Archived */
       is_archived: boolean;
     };
+    /** DeadlineRead */
+    DeadlineRead: {
+      /** Job Id */
+      job_id: string;
+      /** Due Time Min */
+      due_time_min: number;
+      /** Earliest Completion Min */
+      earliest_completion_min: number;
+    };
+    /** DraftJob */
+    DraftJob: {
+      /** Label */
+      label: string | null;
+      /** Job Id */
+      job_id: string | null;
+      /** Processing Time Min */
+      processing_time_min: number | null;
+      /** Release Time Min */
+      release_time_min: number | null;
+      /** Due Time Min */
+      due_time_min: number | null;
+      /** Priority Weight */
+      priority_weight: number | null;
+      /** Must Finish On Time */
+      must_finish_on_time: boolean;
+    };
     /** EvidenceRead */
     EvidenceRead: {
       /** Evidence Id */
@@ -504,6 +643,54 @@ export interface components {
       facts: {
         [key: string]: string;
       }[];
+    };
+    /** ExplanationRead */
+    ExplanationRead: {
+      /** Run Id */
+      run_id: string;
+      /** Baseline Run Id */
+      baseline_run_id: string | null;
+      /** Dataset Id */
+      dataset_id: string;
+      /** Scenario Id */
+      scenario_id: string;
+      /**
+       * Method
+       * @enum {string}
+       */
+      method: "fcfs" | "edd" | "milp";
+      /**
+       * Solver Status
+       * @enum {string}
+       */
+      solver_status:
+        | "optimal"
+        | "time_limit"
+        | "gap_limit"
+        | "infeasible"
+        | "unbounded"
+        | "error"
+        | "not_run";
+      /** Result Source */
+      result_source: ("heuristic" | "cbc_incumbent" | "heuristic_fallback") | null;
+      /** Proven Optimal */
+      proven_optimal: boolean;
+      /** Has Valid Schedule */
+      has_valid_schedule: boolean;
+      /** Machine Count */
+      machine_count: number;
+      /** Must Finish Job Ids */
+      must_finish_job_ids: string[];
+      metrics: components["schemas"]["KPI"] | null;
+      baseline_metrics: components["schemas"]["KPI"] | null;
+      /** Summary */
+      summary: string[];
+      /** Changes */
+      changes: {
+        [key: string]: components["schemas"]["ReductionRead"];
+      };
+      /** Job Changes */
+      job_changes: components["schemas"]["JobChangeRead"][];
     };
     /** ExportBundleRequest */
     ExportBundleRequest: {
@@ -572,6 +759,12 @@ export interface components {
       ai_available: boolean;
       /** Ai Enabled */
       ai_enabled: boolean;
+      /** Ai Provider */
+      ai_provider?: string | null;
+      /** Ai Model */
+      ai_model?: string | null;
+      /** Ai Reasoning Effort */
+      ai_reasoning_effort?: string | null;
       /** Version */
       version: string;
     };
@@ -587,6 +780,27 @@ export interface components {
       due_time_min: number;
       /** Priority Weight */
       priority_weight: number;
+    };
+    /** JobChangeRead */
+    JobChangeRead: {
+      /** Job Id */
+      job_id: string;
+      /** Priority Weight */
+      priority_weight: number;
+      /** Due Time Min */
+      due_time_min: number;
+      /** Baseline Completion Min */
+      baseline_completion_min: number;
+      /** Completion Min */
+      completion_min: number;
+      /** Baseline Tardiness Min */
+      baseline_tardiness_min: number;
+      /** Tardiness Min */
+      tardiness_min: number;
+      /** Weighted Tardiness Reduction */
+      weighted_tardiness_reduction: number;
+      /** Must Finish On Time */
+      must_finish_on_time: boolean;
     };
     /** KPI */
     KPI: {
@@ -625,6 +839,17 @@ export interface components {
       /** Completion Min */
       completion_min: number;
     };
+    /** PlanningInput */
+    PlanningInput: {
+      /** Jobs */
+      jobs: components["schemas"]["Job"][];
+      /** Machine Count */
+      machine_count: number;
+      /** Horizon Min */
+      horizon_min?: number | null;
+      /** Must Finish Job Ids */
+      must_finish_job_ids?: string[];
+    };
     /** PreviewRead */
     PreviewRead: {
       /** Valid */
@@ -655,6 +880,38 @@ export interface components {
       absolute_reduction: number;
       /** Percentage Reduction */
       percentage_reduction: number | null;
+    };
+    /** RulesAppliedRead */
+    RulesAppliedRead: {
+      scenario: components["schemas"]["ScenarioRead"];
+      /** Run Ids */
+      run_ids: string[];
+      preview: components["schemas"]["RulesPreviewRead"];
+    };
+    /** RulesPreviewRead */
+    RulesPreviewRead: {
+      /** Scenario Id */
+      scenario_id: string;
+      /** Dataset Id */
+      dataset_id: string;
+      /** Job Hash */
+      job_hash: string;
+      /** Horizon Min */
+      horizon_min: number;
+      /** Input Hash */
+      input_hash: string;
+      /** Base Machine Count */
+      base_machine_count: number;
+      /** Machine Count */
+      machine_count: number;
+      /** Job Ids */
+      job_ids: string[];
+      /** Add Machine */
+      add_machine: boolean;
+      /** Deadlines */
+      deadlines: components["schemas"]["DeadlineRead"][];
+      /** Warnings */
+      warnings: string[];
     };
     /** RunRead */
     RunRead: {
@@ -719,6 +976,11 @@ export interface components {
       finished_at: string | null;
       /** Placements */
       placements: components["schemas"]["Placement"][];
+      /**
+       * Must Finish Job Ids
+       * @default []
+       */
+      must_finish_job_ids: string[];
     };
     /** RunRequest */
     RunRequest: {
@@ -746,6 +1008,31 @@ export interface components {
       machine_count: number;
       /** Machines */
       machines: components["schemas"]["MachineRead"][];
+      /**
+       * Must Finish Job Ids
+       * @default []
+       */
+      must_finish_job_ids: string[];
+    };
+    /** ScenarioRulesRequest */
+    ScenarioRulesRequest: {
+      /** Job Ids */
+      job_ids?: string[];
+      /**
+       * Add Machine
+       * @default false
+       */
+      add_machine: boolean;
+      /**
+       * Confirmed
+       * @default false
+       */
+      confirmed: boolean;
+      /**
+       * Time Limit Seconds
+       * @default 60
+       */
+      time_limit_seconds: number;
     };
     /** ValidationError */
     ValidationError: {
@@ -768,6 +1055,73 @@ export interface components {
       field: string;
       /** Message */
       message: string;
+    };
+    /** WorkloadConfirmRequest */
+    WorkloadConfirmRequest: {
+      /** Description */
+      description: string;
+      draft: components["schemas"]["WorkloadDraft"];
+      /** Name */
+      name: string;
+      /**
+       * Confirmation Id
+       * Format: uuid
+       */
+      confirmation_id: string;
+      /**
+       * Confirmed
+       * @default false
+       */
+      confirmed: boolean;
+      /**
+       * Time Limit Seconds
+       * @default 60
+       */
+      time_limit_seconds: number;
+    };
+    /** WorkloadDescriptionRequest */
+    WorkloadDescriptionRequest: {
+      /** Description */
+      description: string;
+    };
+    /** WorkloadDraft */
+    WorkloadDraft: {
+      /** Machine Count */
+      machine_count: number | null;
+      /**
+       * Time Basis
+       * @enum {string}
+       */
+      time_basis: "minutes_from_start" | "needs_clarification";
+      /** Jobs */
+      jobs: components["schemas"]["DraftJob"][];
+      /** Clarifications */
+      clarifications: string[];
+      /** Unsupported Requirements */
+      unsupported_requirements: string[];
+    };
+    /** WorkloadPreviewRead */
+    WorkloadPreviewRead: {
+      draft: components["schemas"]["WorkloadDraft"];
+      /** Ready */
+      ready: boolean;
+      /** Questions */
+      questions: string[];
+      /** Errors */
+      errors: string[];
+      /** Assumptions */
+      assumptions: string[];
+      /** Unsupported Requirements */
+      unsupported_requirements: string[];
+      /** Warnings */
+      warnings: string[];
+      planning_input: components["schemas"]["PlanningInput"] | null;
+    };
+    /** WorkloadReviewRequest */
+    WorkloadReviewRequest: {
+      /** Description */
+      description: string;
+      draft: components["schemas"]["WorkloadDraft"];
     };
   };
   responses: never;
@@ -894,6 +1248,105 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": components["schemas"]["GenerateRequest"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["DatasetRead"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  describe_workload_api_v1_natural_language_parse_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["WorkloadDescriptionRequest"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["WorkloadPreviewRead"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  review_description_api_v1_natural_language_review_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["WorkloadReviewRequest"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["WorkloadPreviewRead"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  confirm_description_api_v1_natural_language_confirm_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["WorkloadConfirmRequest"];
       };
     };
     responses: {
@@ -1129,6 +1582,109 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["RunRead"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  preview_rules_api_v1_scenarios__scenario_id__rules_preview_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        scenario_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["ScenarioRulesRequest"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["RulesPreviewRead"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  apply_rules_api_v1_scenarios__scenario_id__rules_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        scenario_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["ScenarioRulesRequest"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      202: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["RulesAppliedRead"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  explanation_api_v1_runs__run_id__explanation_get: {
+    parameters: {
+      query?: {
+        baseline_run_id?: string | null;
+      };
+      header?: never;
+      path: {
+        run_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ExplanationRead"];
         };
       };
       /** @description Validation Error */
